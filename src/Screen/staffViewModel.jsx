@@ -23,7 +23,7 @@ class StaffViewModel extends Component {
   render() {
     const { items } = this.state;
     return (
-      <div>
+      <div className="main-content">
         <h1>Staff Details</h1>
         <table>
           <tr>

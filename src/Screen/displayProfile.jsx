@@ -28,7 +28,7 @@ function DisplayProfile() {
   }, [id]);
 
   return (
-    <div>
+    <div className="main-content">
       <button onClick={handleGoBack}>Back</button>
       <table>
         <thead>

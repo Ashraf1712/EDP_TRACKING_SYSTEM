@@ -9,7 +9,6 @@ class StaffService {
       const jsonData = await response.json();
 
       const user = jsonData.find((user) => user.id === id);
-      console.log(user);
 
       if (user) {
         return user;
