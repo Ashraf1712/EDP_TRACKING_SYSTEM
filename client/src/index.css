@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.profile-logo {
+    padding: 5px;
+}
+
+.profile-name {
+    padding-right: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profileImage {
+    padding-bottom: 10px;
+    height: 42px;
+    width: 42px;
+}
+
+.img-thumbnail {
+    padding: 0.25rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    max-width: 100%;
+    height: auto;
+}
+
+.Navbar {
+    text-align: center;
+    /* place-items: center; */
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+    height: 52px;
+    background-color: #7ac76b;
+    color: #1a1a1a;
+}
