@@ -30,10 +30,7 @@ export const useRegister = () => {
             setError(json.error)
         }
         if (response.ok){
-            localStorage.setItem('user', JSON.stringify(json))
             navigate('/login')
-            dispatch({type: 'LOGIN',payload: json})
-            setIsLoading(false)
         }
         
     }

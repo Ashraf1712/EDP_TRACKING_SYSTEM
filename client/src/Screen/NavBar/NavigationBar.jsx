@@ -1,55 +1,49 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import StaffService from "../../Services/staffService";
+import { useLogout } from '../../hooks/useLogout';
+import { useAuthContext } from "../../hooks/useAuthContext"
+import { Link } from "react-router-dom"
 
 function NavigationBar() {
-  const id = 1;
-  const [items, setItems] = useState([]);
-  const [error, setError] = useState(null);
+  const {logout} = useLogout();
   const [isOpen, setIsOpen] = useState(false);
+  const {user} = useAuthContext()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let staff = new StaffService();
-        const jsonData = await staff.getUserByID(id);
-        setItems(jsonData);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
-
-    fetchData();
-  }, [id]);
-
-  const expandNavBar = () => {
-    setIsOpen(!isOpen);
+  const handleLogout = () => {
+    // setIsOpen(!isOpen);
+    logout();
   };
 
-  return (
-    <div>
-      <nav className="Navbar">
-        <div className="Navbar-left-side">
-          <button onClick={expandNavBar}>Logo</button>
-        </div>
-        <div className="Navbar-right-side">
-          <div className="profile-name">{items.name}</div>
-          <div className="profile-logo">
-            <img
-              className="img-thumbnail"
-              alt="profileImage"
-              rel="icon"
-              src="/profile.png"
-            />
-          </div>
-        </div>
-      </nav>
 
-      {/* <div className={`Navbar-left${isOpen ? "-expand" : ""}`}>
-        Test Vertical
-        <div className={`${isOpen ? "sidebar" : ""}`}>Test 2</div>
-      </div> */}
+  return (
+<div className="navbar bg-gray-200">
+  <div className="flex-1">
+    <a className="btn btn-ghost text-lg">PETRONAS</a>
+  </div>
+  <div className="flex-none">
+    <div>
+    <p className="text-primary-content p-2">
+  {user && user.email ? user.email : ''}
+</p>
+
     </div>
+    <div className="dropdown dropdown-end">
+      <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+        <div className="w-10 rounded-full">
+          <img alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+        </div>
+      </div>
+      <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        <li>
+          <a className="justify-between">
+            Profile
+          </a>
+        </li>
+        <li><a>Settings</a></li>
+        <li><a onClick={handleLogout}>Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
   );
 }
 

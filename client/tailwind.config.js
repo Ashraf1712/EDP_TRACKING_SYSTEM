@@ -9,7 +9,7 @@ export default {
             }
         },
     },
-    plugins: [],
+    plugins: [require("daisyui")],
     fontFamily: {
         'body': [
             'Inter',
