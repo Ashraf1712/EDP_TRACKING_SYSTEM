@@ -41,6 +41,8 @@ export const useRegister = () => {
         if (response.ok){
             console.log(json);
             navigate('/login')
+            dispatch({type: 'LOGIN',payload: json})
+            setIsLoading(false)
         }
         
     }

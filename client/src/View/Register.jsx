@@ -77,15 +77,24 @@ export default function Register() {
                       className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Jane Doe" required="">
                   </input></div>
                   <div>
-                      <label htmlFor="staffDepartment" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Department</label>
-                      <input type="text" name="staffDepartment" id="staffDepartment" onChange={(e) => setStaff({...staff,[e.target.name]:e.target.value})}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Production Plant 1" required="">
-                  </input></div>
+                    <label htmlFor="staffDepartment" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Department</label>
+                    <select name="staffDepartment" id="staffDepartment" onChange={(e) => setStaff({...staff, [e.target.name]: e.target.value})}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                        <option value="Production Plant 1">Production Plant 1</option>
+                        <option value="Production Plant 2">Production Plant 2</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="HRM">Human Resource Managemnt</option>
+                    </select>
+                </div>
                   <div>
                       <label htmlFor="staffCategory" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Category</label>
-                      <input type="text" name="staffCategory" id="staffCategory" onChange={(e) => setStaff({...staff,[e.target.name]:e.target.value})}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Executive" required="">
-                  </input></div>
+                      <select name="staffCategory" id="staffCategory" onChange={(e) => setStaff({...staff, [e.target.name]: e.target.value})}
+                          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                          <option value="Executive">Executive</option>
+                          <option value="Non-Executive">Non-Executive</option>
+                          <option value="Manager">Manager</option>
+                      </select>
+                  </div>
                   <div>
                       <label htmlFor="staffSection" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Section</label>
                       <input type="text" name="staffSection" id="staffSection" onChange={(e) => setStaff({...staff,[e.target.name]:e.target.value})}

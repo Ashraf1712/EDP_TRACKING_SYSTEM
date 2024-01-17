@@ -17,7 +17,7 @@ function NavigationBar() {
   return (
 <div className="navbar bg-gray-200">
   <div className="flex-1">
-    <a className="btn btn-ghost text-lg">PETRONAS</a>
+    <a className="btn btn-ghost text-lg text-petronas-primary">PETRONAS</a>
   </div>
   <div className="flex-none">
     <div>
