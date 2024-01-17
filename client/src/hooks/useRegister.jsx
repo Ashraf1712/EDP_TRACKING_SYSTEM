@@ -7,7 +7,7 @@ export const useRegister = () => {
     const [isLoading, setIsLoading] = useState('')
     const {dispatch} = useAuthContext()
     const navigate = useNavigate()
-    const register = async (email, password) => {
+    const register = async (user) => {
 
         setIsLoading(true)
         setError(null)
@@ -18,18 +18,28 @@ export const useRegister = () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email,
-                password
+                staff:
+                {
+                    staffID : user.staffID,
+                    staffEmail : user.staffEmail,
+                    staffPassword : user.staffPassword,
+                    staffName : user.staffName,
+                    staffDepartment : user.staffDepartment,
+                    staffCategory: user.staffCategory,
+                    staffSection: user.staffSection,
+                }
             })
         })
         const json = await response.json()
         
         if (!response.ok) {
+            console.log(user);
             console.log(json.error)
             setIsLoading(false)
             setError(json.error)
         }
         if (response.ok){
+            console.log(json);
             navigate('/login')
         }
         

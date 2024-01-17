@@ -30,6 +30,7 @@ app.use((req, res, next) => {
 mongoose.connect(process.env.MONGODB_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        dbName: 'edpDB',
     })
     .then(() => {
         console.log('Connected to MongoDB');

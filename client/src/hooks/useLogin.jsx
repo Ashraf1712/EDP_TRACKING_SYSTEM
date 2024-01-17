@@ -19,13 +19,13 @@ export const useLogin = () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email,
-                password
+                    email,
+                    password
             })
         })
         
         const json = await response.json()
-        
+        console.log(email);
         if (!response.ok) {
             console.log(json.error)
             setIsLoading(false)

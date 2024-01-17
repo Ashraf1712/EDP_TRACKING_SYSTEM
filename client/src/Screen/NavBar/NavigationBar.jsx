@@ -22,7 +22,7 @@ function NavigationBar() {
   <div className="flex-none">
     <div>
     <p className="text-primary-content p-2">
-  {user && user.email ? user.email : ''}
+  {user && user.Staff_Name ? user.Staff_Name : ''}
 </p>
 
     </div>
