@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {Link} from 'react-router-dom';
-import { useRegister } from "../hooks/useRegister"
-import Staff from '../Model/Staff';
+import { useRegister } from "../../hooks/useRegister"
+import Staff from '../../Model/Staff';
 
 
 export default function Register() {

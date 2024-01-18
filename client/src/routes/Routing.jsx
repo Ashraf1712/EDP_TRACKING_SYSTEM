@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext'
-import NavigationBar from "../Screen/NavBar/NavigationBar";
-import Register from '../View/Register';
-import Login from '../View/Login';
+import NavigationBar from "../Components/NavigationBar";
+import Register from '../View/Auth/Register';
+import Login from '../View/Auth/Login';
 import Homepage from '../View/Homepage';
 
 function Routing() {

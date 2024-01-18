@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useLogout } from '../../hooks/useLogout';
-import { useAuthContext } from "../../hooks/useAuthContext"
-import { Link } from "react-router-dom"
+import { useLogout } from '../hooks/useLogout';
+import { useAuthContext } from "../hooks/useAuthContext";
+import { Link } from "react-router-dom";
 
 function NavigationBar() {
   const {logout} = useLogout();
@@ -15,13 +15,15 @@ function NavigationBar() {
 
 
   return (
-<div className="navbar bg-gray-200">
+<div className="navbar bg-gray-800">
   <div className="flex-1">
     <a className="btn btn-ghost text-lg text-petronas-primary">PETRONAS</a>
+    <button className="btn btn-ghost text-lg text-gray-50 ml-1">Homepage</button>
+    <button className="btn btn-ghost text-lg text-gray-50 ml-1">Dashboard</button>
   </div>
   <div className="flex-none">
     <div>
-    <p className="text-primary-content p-2">
+    <p className="text-white p-2">
   {user && user.Staff_Name ? user.Staff_Name : ''}
 </p>
 
