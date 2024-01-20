@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 export const useRegister = () => {
     const [error, setError] = useState('')
     const [isLoading, setIsLoading] = useState('')
-    const {dispatch} = useAuthContext()
+    const { dispatch } = useAuthContext()
     const navigate = useNavigate()
     const register = async (user) => {
 
@@ -20,31 +20,30 @@ export const useRegister = () => {
             body: JSON.stringify({
                 staff:
                 {
-                    staffID : user.staffID,
-                    staffEmail : user.staffEmail,
-                    staffPassword : user.staffPassword,
-                    staffName : user.staffName,
-                    staffDepartment : user.staffDepartment,
-                    staffCategory: user.staffCategory,
-                    staffSection: user.staffSection,
+                    staffID: user.staffID,
+                    staffEmail: user.staffEmail,
+                    staffPassword: user.staffPassword,
+                    staffName: user.staffName,
+                    departmentID: user.departmentID,
+                    categoryID: user.categoryID,
+                    sectionID: user.sectionID,
                 }
             })
         })
         const json = await response.json()
-        
+
         if (!response.ok) {
             console.log(user);
             console.log(json.error)
             setIsLoading(false)
             setError(json.error)
         }
-        if (response.ok){
+        if (response.ok) {
             console.log(json);
             navigate('/login')
-            dispatch({type: 'LOGIN',payload: json})
             setIsLoading(false)
         }
-        
+
     }
-    return {register, isLoading, error}
+    return { register, isLoading, error }
 }

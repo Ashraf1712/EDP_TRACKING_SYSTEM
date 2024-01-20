@@ -22,17 +22,27 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    Staff_Department: {
+    Department_ID: {
         type: String,
         required: true,
+        unique: true,
     },
-    Staff_Category: {
+    Category_ID: {
         type: String,
         required: true,
+        unique: true,
+
     },
-    Staff_Section: {
+    Section_ID: {
         type: String,
         required: true,
+        unique: true,
+
+    },
+    Staff_Roles: {
+        type: String,
+        required: true,
+        default: "User",
     },
     created_at: {
         type: Date,
@@ -70,9 +80,9 @@ userSchema.statics.register = async function(staff) {
         Staff_Email: staff.staffEmail,
         Staff_Password: hash,
         Staff_Name: staff.staffName,
-        Staff_Department: staff.staffDepartment,
-        Staff_Category: staff.staffCategory,
-        Staff_Section: staff.staffSection
+        Department_ID: staff.departmentID,
+        Category_ID: staff.categoryID,
+        Section_ID: staff.sectionID
     })
 
     return user;

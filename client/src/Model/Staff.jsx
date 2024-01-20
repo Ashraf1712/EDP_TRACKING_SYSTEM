@@ -3,82 +3,81 @@ class Staff {
   staffEmail = null;
   staffPassword = null;
   staffName = null;
-  staffDepartment = null;
-  staffCategory = null;
-  staffSection = null;
+  departmentID = null;
+  categoryID = null;
+  sectionID = null;
 
   constructor(_id, _email, _password, _name, _department, _category, _section) {
     this.staffID = _id;
     this.staffEmail = _email;
     this.staffPassword = _password;
     this.staffName = _name;
-    this.staffDepartment = _department;
-    this.staffCategory = _category;
-    this.staffSection = _section;
+    this.departmentID = _department;
+    this.categoryID = _category;
+    this.sectionID = _section;
   }
 
-
-  // Getter and setter for staffID
-  get getStaffID() {
-    return this.staffID;
+  // Getter and Setter for staffID
+  getStaffID() {
+    return this._staffID;
   }
 
-  set setStaffID(_staffID) {
-    this.staffID = _staffID;
+  setStaffID(value) {
+    this._staffID = value;
   }
 
-  // Getter and setter for staffEmail
-  get getStaffEmail() {
-    return this.staffEmail;
+  // Getter and Setter for staffEmail
+  getStaffEmail() {
+    return this._staffEmail;
   }
 
-  set setStaffEmail(_email) {
-    this.staffEmail = _email;
+  setStaffEmail(value) {
+    this._staffEmail = value;
   }
 
-  // Getter and setter for staffPassword
-  get getStaffPassword() {
-    return this.staffPassword;
+  // Getter and Setter for staffPassword
+  getStaffPassword() {
+    return this._staffPassword;
   }
 
-  set setStaffPassword(_password) {
-    this.staffPassword = _password;
+  setStaffPassword(value) {
+    this._staffPassword = value;
   }
 
-  // Getter and setter for staffName
-  get getStaffName() {
-    return this.staffName;
+  // Getter and Setter for staffName
+  getStaffName() {
+    return this._staffName;
   }
 
-  set setStaffName(_name) {
-    this.staffName = _name;
+  setStaffName(value) {
+    this._staffName = value;
   }
 
-  // Getter and setter for staffDeparment
-  get getStaffDepartment() {
-    return this.staffDepartment;
+  // Getter and Setter for departmentID
+  getDepartmentID() {
+    return this._departmentID;
   }
 
-  set setStaffDepartment(_department) {
-    this.staffDepartment = _department;
+  setDepartmentID(value) {
+    this._departmentID = value;
   }
 
-  // Getter and setter for staffCategory
-  get getStaffCategory() {
-    return this.staffCategory;
+  // Getter and Setter for categoryID
+  getCategoryID() {
+    return this._categoryID;
   }
 
-  set setStaffCategory(_category) {
-    this.staffCategory = _category;
+  setCategoryID(value) {
+    this._categoryID = value;
   }
 
-  // Getter and setter for staffSection
-  get getStaffSection() {
-    return this.staffSection;
+  // Getter and Setter for sectionID
+  getSectionID() {
+    return this._sectionID;
   }
 
-  set setStaffSection(_section) {
-    this.staffSection = _section;
+  setSectionID(value) {
+    this._sectionID = value;
   }
 
 }
