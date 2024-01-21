@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
-const Schema = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
     Staff_ID: {
@@ -19,6 +18,10 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     Staff_Name: {
+        type: String,
+        required: true,
+    },
+    Staff_ReportedTo: {
         type: String,
         required: true,
     },
@@ -44,6 +47,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         default: "User",
     },
+
     created_at: {
         type: Date,
         default: Date.now,
@@ -64,11 +68,14 @@ userSchema.statics.register = async function(staff) {
     if (!validator.isEmail(staff.staffEmail)) {
         throw new Error('Email is not valid');
     }
+    if (!validator.isEmail(staff.staffReportedTo)) {
+        throw new Error('Reported Email is not valid');
+    }
     if (!validator.isStrongPassword(staff.staffPassword)) {
         throw new Error('Password is not strong enough');
     }
 
-    const exists = await this.findOne({ staffEmail: staff.staffEmail });
+    const exists = await this.findOne({ Staff_Email: staff.staffEmail });
     if (exists) {
         throw new Error('User already exists');
     }
@@ -80,6 +87,7 @@ userSchema.statics.register = async function(staff) {
         Staff_Email: staff.staffEmail,
         Staff_Password: hash,
         Staff_Name: staff.staffName,
+        Staff_ReportedTo: staff.staffReportedTo,
         Department_ID: staff.departmentID,
         Category_ID: staff.categoryID,
         Section_ID: staff.sectionID

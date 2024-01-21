@@ -24,6 +24,7 @@ export const useRegister = () => {
                     staffEmail: user.staffEmail,
                     staffPassword: user.staffPassword,
                     staffName: user.staffName,
+                    staffReportedTo: user.staffReportedTo,
                     departmentID: user.departmentID,
                     categoryID: user.categoryID,
                     sectionID: user.sectionID,

@@ -3,15 +3,17 @@ class Staff {
   staffEmail = null;
   staffPassword = null;
   staffName = null;
+  staffReportedTo = null;
   departmentID = null;
   categoryID = null;
   sectionID = null;
 
-  constructor(_id, _email, _password, _name, _department, _category, _section) {
+  constructor(_id, _email, _password, _name, _reportedTo, _department, _category, _section) {
     this.staffID = _id;
     this.staffEmail = _email;
     this.staffPassword = _password;
     this.staffName = _name;
+    this.staffReportedTo = _reportedTo;
     this.departmentID = _department;
     this.categoryID = _category;
     this.sectionID = _section;
@@ -19,65 +21,74 @@ class Staff {
 
   // Getter and Setter for staffID
   getStaffID() {
-    return this._staffID;
+    return this.staffID;
   }
 
   setStaffID(value) {
-    this._staffID = value;
+    this.staffID = value;
   }
 
   // Getter and Setter for staffEmail
   getStaffEmail() {
-    return this._staffEmail;
+    return this.staffEmail;
   }
 
   setStaffEmail(value) {
-    this._staffEmail = value;
+    this.staffEmail = value;
   }
 
   // Getter and Setter for staffPassword
   getStaffPassword() {
-    return this._staffPassword;
+    return this.staffPassword;
   }
 
   setStaffPassword(value) {
-    this._staffPassword = value;
+    this.staffPassword = value;
   }
 
   // Getter and Setter for staffName
   getStaffName() {
-    return this._staffName;
+    return this.staffName;
   }
 
   setStaffName(value) {
-    this._staffName = value;
+    this.staffName = value;
+  }
+
+  // Getter and Setter for staffReportedTo
+  getStaffReportedTo() {
+    return this.staffReportedTo;
+  }
+
+  setStaffReportedTo(value) {
+    this.staffReportedTo = value;
   }
 
   // Getter and Setter for departmentID
   getDepartmentID() {
-    return this._departmentID;
+    return this.departmentID;
   }
 
   setDepartmentID(value) {
-    this._departmentID = value;
+    this.departmentID = value;
   }
 
   // Getter and Setter for categoryID
   getCategoryID() {
-    return this._categoryID;
+    return this.categoryID;
   }
 
   setCategoryID(value) {
-    this._categoryID = value;
+    this.categoryID = value;
   }
 
   // Getter and Setter for sectionID
   getSectionID() {
-    return this._sectionID;
+    return this.sectionID;
   }
 
   setSectionID(value) {
-    this._sectionID = value;
+    this.sectionID = value;
   }
 
 }
