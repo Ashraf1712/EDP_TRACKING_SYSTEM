@@ -6,7 +6,9 @@ const mongoose = require('mongoose');
 
 //Routes Import
 const userRoutes = require('./routes/userRoutes.js');
-const edpRoutes = require('./routes/edpRoutes.js');
+const goalsRoutes = require('./routes/goalsRoutes.js');
+const planRoutes = require('./routes/planRoutes.js');
+const statusRoutes = require('./routes/statusRoutes.js');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -42,7 +44,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 //Routes
 app.use('/api/user', userRoutes);
-app.use('/api/edp', edpRoutes);
+app.use('/api/goals', goalsRoutes);
+app.use('/api/plan', planRoutes);
+app.use('/api/status', statusRoutes);
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 app.listen(port, () => {
