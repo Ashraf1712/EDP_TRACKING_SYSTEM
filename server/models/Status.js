@@ -21,6 +21,7 @@ const statusSchema = new mongoose.Schema({
     Goals_ID: {
         type: String,
         required: true,
+        unique: true,
     },
     created_at: {
         type: Date,

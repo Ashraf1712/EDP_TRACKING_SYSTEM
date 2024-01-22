@@ -5,6 +5,7 @@ import NavigationBar from "../Components/NavigationBar";
 import Register from '../View/Auth/Register';
 import Login from '../View/Auth/Login';
 import Homepage from '../View/Homepage';
+import AddEDP from '../View/EDP/AddEDP';
 
 function Routing() {
   const { user, isLoading } = useAuthContext();
@@ -37,6 +38,7 @@ function Routing() {
                 path="/register"
                 element={<Navigate to="/" />}
               />
+              <Route path="/edp-add" element={<AddEDP />} />
             </>
           ) : (
             <>

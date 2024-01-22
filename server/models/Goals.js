@@ -63,6 +63,7 @@ goalsSchema.statics.getGoalsByEmail = async function(goals) {
         throw new Error('Something wrong with the data');
     }
 
+    //Get Goals
     const allGoalsDataArray = await this.find({ Staff_Email: goals.staffEmail }).toArray();
     if (!allGoalsDataArray) {
         throw new Error('Theres Something wrong with the server');
