@@ -24,7 +24,6 @@ const planSchema = new mongoose.Schema({
     },
     Remarks: {
         type: String,
-        required: true,
     },
     Goals_ID: {
         type: String,

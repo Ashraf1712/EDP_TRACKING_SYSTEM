@@ -10,6 +10,6 @@ const {
 
 //status module
 router.post('/createStatus', createStatusData)
-router.get('/getStatus', getStatusData)
+router.get('/getStatus/:goalsID', getStatusData)
 
 module.exports = router;

@@ -9,6 +9,6 @@ const {
 
 //goals module
 router.post('/createGoals', createGoalsData)
-router.get('/getGoals/:staffEmail', getGoalsData)
+router.get('/getGoalsByEmail/:staffEmail', getGoalsData)
 
 module.exports = router;

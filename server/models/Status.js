@@ -6,17 +6,19 @@ const statusSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    Status: {
+        type: String,
+        required: true,
+    },
     Due_Date: {
         type: Date,
         required: true,
     },
     Date_Agreement: {
         type: Date,
-        required: true,
     },
     Date_Review: {
         type: Date,
-        required: true,
     },
     Goals_ID: {
         type: String,
@@ -46,6 +48,7 @@ statusSchema.statics.createStatus = async function(status) {
 
     const statusData = await this.create({
         Status_ID: status.statusID,
+        Status: status.status,
         Due_Date: status.dueDate,
         Date_Agreement: status.dateAgreement,
         Date_Review: status.dateReview,

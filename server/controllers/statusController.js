@@ -6,18 +6,18 @@ const createStatusData = async(req, res) => {
 
     try {
         const statusData = await Status.createStatus(status)
-        res.status(200).json({ statusData, token })
+        res.status(200).json({ statusData })
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
 }
 
 const getStatusData = async(req, res) => {
-    const { status } = req.body;
+    const { goalsID } = req.body;
 
     try {
-        const statusData = await Status.getStatusByGoalsID(status)
-        res.status(200).json({ statusData, token })
+        const statusData = await Status.getStatusByGoalsID(goalsID)
+        res.status(200).json({ statusData })
     } catch (error) {
         res.status(400).json({ error: error.message })
     }

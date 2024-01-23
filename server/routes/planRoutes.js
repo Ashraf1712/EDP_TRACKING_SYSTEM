@@ -9,6 +9,6 @@ const {
 
 //plan module
 router.post('/createPlan', createPlanData)
-router.get('/getPlan', getPlanData)
+router.get('/getPlan/:goalsID', getPlanData)
 
 module.exports = router;
