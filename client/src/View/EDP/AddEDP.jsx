@@ -1,14 +1,20 @@
-import { useState } from "react";
-import CountCard from "../../Components/CountCard";
+import React, { useState } from "react";
 import Dropdown from "../../Components/Dropdown";
+import DatepickerReact from "../../Components/DatepickerReact";
+import TextareaInput from "../../Components/TextareaInput";
 
 export default function AddEDP() {
+  let typeUser = "User";
   const [longTermGoal, setLongTermGoal] = useState("");
   const [shortTermGoal, setShortTermGoal] = useState("");
   const [competencyCluster, setCompetencyCluster] = useState("");
   const [intervention, setIntervention] = useState("");
   const [gapsToAddress, setGapsToAddress] = useState("");
   const [gapsClosure, setGapsClosure] = useState("");
+  const [dueDate, setDueDate] = useState(null);
+  const [agreementDate, setAgreementDate] = useState(null);
+  const [status, setStatus] = useState("");
+  const [remarks, setRemarks] = useState("");
 
   return (
     <div>
@@ -23,26 +29,18 @@ export default function AddEDP() {
         <div className="flex flex-col">
           <div className="flex flex-row">
             <div className="w-1/2 p-4">
-              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <p className="text-m font-medium ">Long Term Goal</p>
-                <textarea
-                  className="textarea textarea-primary w-full"
-                  placeholder="Long Term Goal"
-                  onChange={(e) => setLongTermGoal(e.target.value)}
-                  required=""
-                ></textarea>
-              </div>
+              <TextareaInput
+                label="Long Term Goal"
+                onChangeData={setLongTermGoal}
+              />
+              <div>Long Term Goal: {longTermGoal} </div>
             </div>
             <div className="w-1/2 p-4">
-              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <p className="text-m font-medium">Short Term Goal</p>
-                <textarea
-                  className="textarea textarea-primary w-full"
-                  placeholder="Short Term Goal"
-                  onChange={(e) => setShortTermGoal(e.target.value)}
-                  required=""
-                ></textarea>
-              </div>
+              <TextareaInput
+                label="Short Term Goal"
+                onChangeData={setShortTermGoal}
+              />
+              <div>Short Term Goal: {shortTermGoal} </div>
             </div>
           </div>
           <div className="flex flex-row">
@@ -74,25 +72,56 @@ export default function AddEDP() {
           </div>
           <div className="flex flex-row">
             <div className="w-1/2 p-4">
-              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <p className="text-m font-medium ">Gaps to Address</p>
-                <textarea
-                  className="textarea textarea-primary w-full"
-                  placeholder="Gaps to Address"
-                  onChange={(e) => setGapsToAddress(e.target.value)}
-                  required=""
-                ></textarea>
-              </div>
+              <TextareaInput
+                label="Gaps to Address"
+                onChangeData={setGapsToAddress}
+              />
             </div>
             <div className="w-1/2 p-4">
+              <TextareaInput
+                label="Gaps Closure"
+                onChangeData={setGapsClosure}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-row">
+            <div className="w-1/3 p-4">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <p className="text-m font-medium">Gaps Closure</p>
-                <textarea
-                  className="textarea textarea-primary w-full"
-                  placeholder="Gaps Closure"
-                  onChange={(e) => setGapsClosure(e.target.value)}
-                  required=""
-                ></textarea>
+                <p className="text-m font-medium ">Due Date</p>
+              </div>
+              <DatepickerReact onDateChange={setDueDate} />
+              <div>Due Date: {dueDate}</div>
+            </div>
+
+            <div className="w-1/3 p-4">
+              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <p className="text-m font-medium">Status</p>
+                <Dropdown
+                  constantName={
+                    typeUser === "User" ? "USER_STATUS" : "MANAGER_STATUS"
+                  }
+                  labelText={"Select Status"}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+                <div>Status : {status}</div>
+              </div>
+            </div>
+
+            <div className="w-1/3 p-4">
+              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <p className="text-m font-medium ">Agreement Date</p>
+              </div>
+              <DatepickerReact onDateChange={(e) => setAgreementDate(e)} />
+              <div>Agreement Date: {agreementDate}</div>
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className="w-1/2 p-4">
+              <TextareaInput label="Remarks" onChangeData={setRemarks} />
+              <div>
+                Remarks: <div dangerouslySetInnerHTML={{ __html: remarks }} />
               </div>
             </div>
           </div>

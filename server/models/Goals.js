@@ -37,10 +37,25 @@ const goalsSchema = new mongoose.Schema({
     }
 }, { collection: 'Goals' });
 
+// Helper function to generate a unique Goals_ID
+async function generateUniqueGoalsID() {
+    const existingGoals = await this.find().sort({ Goals_ID: -1 }).limit(1);
+    let lastGoalsID = existingGoals.length > 0 ? existingGoals[0].Goals_ID : 'GLS/2024/0000';
+    let [, year, lastNumber] = lastGoalsID.match(/(\d{4})\/(\d+)/);
+
+    if (parseInt(lastNumber) === 9999) {
+        year = (parseInt(year) + 1).toString();
+        lastNumber = '0000';
+    }
+
+    const nextNumber = (parseInt(lastNumber) + 1).toString().padStart(4, '0');
+    return `GLS/${year}/${nextNumber}`;
+}
+
 // Add a pre-save hook to generate Goals_ID before saving
-goalsSchema.pre('save', async function(next) {
+goalsSchema.pre('save', function(next) {
     if (!this.Goals_ID) {
-        this.Goals_ID = await generateUniqueGoalsID.call(this);
+        this.Goals_ID = generateUniqueGoalsID.call(this);
     }
     next();
 });
@@ -53,13 +68,14 @@ goalsSchema.statics.createGoals = async function(goals) {
     }
 
     const goalsData = await this.create({
-        Goals_ID: goals.goalsID,
+        Goals_ID: await generateUniqueGoalsID.call(mongoose.model('Goals')),
         Goals_Longterm: goals.goalsLongTerm,
         Goals_Shortterm: goals.goalsShortTerm,
         Staff_Email: goals.staffEmail,
         Status_ID: goals.statusID,
         Plan_ID: goals.planID,
     })
+
 
     return goalsData;
 }
@@ -80,19 +96,6 @@ goalsSchema.statics.getGoalsByEmail = async function({ staffEmail }) {
     return allGoalsDataArray;
 }
 
-// Helper function to generate a unique Goals_ID
-async function generateUniqueGoalsID() {
-    const existingGoals = await this.find().sort({ Goals_ID: -1 }).limit(1);
-    let lastGoalsID = existingGoals.length > 0 ? existingGoals[0].Goals_ID : 'GLS/2024/0000';
-    let [, year, lastNumber] = lastGoalsID.match(/(\d{4})\/(\d+)/);
 
-    if (parseInt(lastNumber) === 9999) {
-        year = (parseInt(year) + 1).toString();
-        lastNumber = '0000';
-    }
-
-    const nextNumber = (parseInt(lastNumber) + 1).toString().padStart(4, '0');
-    return `GLS/${year}/${nextNumber}`;
-}
 
 module.exports = mongoose.model('Goals', goalsSchema);
