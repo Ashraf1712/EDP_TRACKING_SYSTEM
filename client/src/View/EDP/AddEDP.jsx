@@ -76,12 +76,15 @@ export default function AddEDP() {
                 label="Gaps to Address"
                 onChangeData={setGapsToAddress}
               />
+              <div>Gaps to Address: {gapsToAddress}</div>
+
             </div>
             <div className="w-1/2 p-4">
               <TextareaInput
                 label="Gaps Closure"
                 onChangeData={setGapsClosure}
               />
+              <div>Gaps Closure: {gapsClosure}</div>
             </div>
           </div>
 
