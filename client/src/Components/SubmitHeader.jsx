@@ -1,8 +1,9 @@
 import React from "react";
 
 function SubmitHeader({ onSubmit }) {
-  const handleSubmitClick = async () => {
+  const handleSubmitClick = async (e) => {
     if (onSubmit) {
+      e.preventDefault();
       await onSubmit();
     }
   };
@@ -13,7 +14,7 @@ function SubmitHeader({ onSubmit }) {
         Cancel
       </button>
       <button
-        onClick={handleSubmitClick}
+        onClick={(e) => handleSubmitClick(e)}
         className="btn btn-xs sm:btn-sm md:btn-sm lg:btn-sm text-white"
       >
         Submit
