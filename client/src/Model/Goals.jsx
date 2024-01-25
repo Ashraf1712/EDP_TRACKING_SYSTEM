@@ -1,87 +1,104 @@
 class Goals {
+  goalsID = null;
+  goalsLongterm = null;
+  goalsShortterm = null;
+  staffEmail = null;
+  statusID = null;
+  planID = null;
+  createdAt = null;
+  updatedAt = null;
+
   constructor(
-    goalsID,
-    goalsLongterm,
-    goalsShortterm,
-    staffEmail,
-    statusID,
-    planID,
-    createdAt,
-    updatedAt
+    _goalsID,
+    _goalsLongterm,
+    _goalsShortterm,
+    _staffEmail,
+    _statusID,
+    _planID,
+    _createdAt,
+    _updatedAt
   ) {
-    this._goalsID = goalsID;
-    this._goalsLongterm = goalsLongterm;
-    this._goalsShortterm = goalsShortterm;
-    this._staffEmail = staffEmail;
-    this._statusID = statusID;
-    this._planID = planID;
-    this._createdAt = new Date(createdAt);
-    this._updatedAt = new Date(updatedAt);
+    this.goalsID = _goalsID;
+    this.goalsLongterm = _goalsLongterm;
+    this.goalsShortterm = _goalsShortterm;
+    this.staffEmail = _staffEmail;
+    this.statusID = _statusID;
+    this.planID = _planID;
+    this.createdAt = _createdAt ? new Date(_createdAt) : null;
+    this.updatedAt = _updatedAt ? new Date(_updatedAt) : null;
   }
 
-  get goalsID() {
-    return this._goalsID;
+  // Getter and Setter for goalsID
+  getGoalsID() {
+    return this.goalsID;
   }
 
-  set goalsID(value) {
-    this._goalsID = value;
+  setGoalsID(value) {
+    this.goalsID = value;
   }
 
-  get goalsLongterm() {
-    return this._goalsLongterm;
+  // Getter and Setter for goalsLongterm
+  getGoalsLongterm() {
+    return this.goalsLongterm;
   }
 
-  set goalsLongterm(value) {
-    this._goalsLongterm = value;
+  setGoalsLongterm(value) {
+    this.goalsLongterm = value;
   }
 
-  get goalsShortterm() {
-    return this._goalsShortterm;
+  // Getter and Setter for goalsShortterm
+  getGoalsShortterm() {
+    return this.goalsShortterm;
   }
 
-  set goalsShortterm(value) {
-    this._goalsShortterm = value;
+  setGoalsShortterm(value) {
+    this.goalsShortterm = value;
   }
 
-  get staffEmail() {
-    return this._staffEmail;
+  // Getter and Setter for staffEmail
+  getStaffEmail() {
+    return this.staffEmail;
   }
 
-  set staffEmail(value) {
-    this._staffEmail = value;
+  setStaffEmail(value) {
+    this.staffEmail = value;
   }
 
-  get statusID() {
-    return this._statusID;
+  // Getter and Setter for statusID
+  getStatusID() {
+    return this.statusID;
   }
 
-  set statusID(value) {
-    this._statusID = value;
+  setStatusID(value) {
+    this.statusID = value;
   }
 
-  get planID() {
-    return this._planID;
+  // Getter and Setter for planID
+  getPlanID() {
+    return this.planID;
   }
 
-  set planID(value) {
-    this._planID = value;
+  setPlanID(value) {
+    this.planID = value;
   }
 
-  get createdAt() {
-    return this._createdAt;
+  // Getter and Setter for createdAt
+  getCreatedAt() {
+    return this.createdAt;
   }
 
-  set createdAt(value) {
-    this._createdAt = value;
+  setCreatedAt(value) {
+    this.createdAt = value;
   }
 
-  get updatedAt() {
-    return this._updatedAt;
+  // Getter and Setter for updatedAt
+  getUpdatedAt() {
+    return this.updatedAt;
   }
 
-  set updatedAt(value) {
-    this._updatedAt = value;
+  setUpdatedAt(value) {
+    this.updatedAt = value;
   }
 }
 
-module.exports = Goals;
+export default Goals;

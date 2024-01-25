@@ -18,6 +18,8 @@ const DatepickerReact = ({ onDateChange }) => {
       asSingle={true}
       value={value}
       onChange={handleValueChange}
+      placeholder="Select a date"
+      displayFormat="DD/MM/YYYY"
     />
   );
 };

@@ -1,96 +1,106 @@
 class Plan {
+  planID = null;
+  competencyAddress = null;
+  competencyCluster = null;
+  actionPlan = null;
+  intervention = null;
+  remarks = null;
+  goalsID = null;
+  createdAt = null;
+  updatedAt = null;
+
   constructor(
-    planID,
-    competencyAddress,
-    competencyCluster,
-    actionPlan,
-    intervention,
-    remarks,
-    goalsID,
-    createdAt,
-    updatedAt
+    _planID,
+    _competencyAddress,
+    _competencyCluster,
+    _actionPlan,
+    _intervention,
+    _remarks,
+    _goalsID,
+    _createdAt,
+    _updatedAt
   ) {
-    this._planID = planID;
-    this._competencyAddress = competencyAddress;
-    this._competencyCluster = competencyCluster;
-    this._actionPlan = actionPlan;
-    this._intervention = intervention;
-    this._remarks = remarks;
-    this._goalsID = goalsID;
-    this._createdAt = new Date(createdAt);
-    this._updatedAt = new Date(updatedAt);
+    this.planID = _planID;
+    this.competencyAddress = _competencyAddress;
+    this.competencyCluster = _competencyCluster;
+    this.actionPlan = _actionPlan;
+    this.intervention = _intervention;
+    this.remarks = _remarks;
+    this.goalsID = _goalsID;
+    this.createdAt = new Date(_createdAt);
+    this.updatedAt = new Date(_updatedAt);
   }
 
-  get planID() {
-    return this._planID;
+  getPlanID() {
+    return this.planID;
   }
 
-  set planID(value) {
-    this._planID = value;
+  setPlanID(value) {
+    this.planID = value;
   }
 
-  get competencyAddress() {
-    return this._competencyAddress;
+  getCompetencyAddress() {
+    return this.competencyAddress;
   }
 
-  set competencyAddress(value) {
-    this._competencyAddress = value;
+  setCompetencyAddress(value) {
+    this.competencyAddress = value;
   }
 
-  get competencyCluster() {
-    return this._competencyCluster;
+  getCompetencyCluster() {
+    return this.competencyCluster;
   }
 
-  set competencyCluster(value) {
-    this._competencyCluster = value;
+  setCompetencyCluster(value) {
+    this.competencyCluster = value;
   }
 
-  get actionPlan() {
-    return this._actionPlan;
+  getActionPlan() {
+    return this.actionPlan;
   }
 
-  set actionPlan(value) {
-    this._actionPlan = value;
+  setActionPlan(value) {
+    this.actionPlan = value;
   }
 
-  get intervention() {
-    return this._intervention;
+  getIntervention() {
+    return this.intervention;
   }
 
-  set intervention(value) {
-    this._intervention = value;
+  setIntervention(value) {
+    this.intervention = value;
   }
 
-  get remarks() {
-    return this._remarks;
+  getRemarks() {
+    return this.remarks;
   }
 
-  set remarks(value) {
-    this._remarks = value;
+  setRemarks(value) {
+    this.remarks = value;
   }
 
-  get goalsID() {
-    return this._goalsID;
+  getGoalsID() {
+    return this.goalsID;
   }
 
-  set goalsID(value) {
-    this._goalsID = value;
+  setGoalsID(value) {
+    this.goalsID = value;
   }
 
-  get createdAt() {
-    return this._createdAt;
+  getCreatedAt() {
+    return this.createdAt;
   }
 
-  set createdAt(value) {
-    this._createdAt = value;
+  setCreatedAt(value) {
+    this.createdAt = new Date(value);
   }
 
-  get updatedAt() {
-    return this._updatedAt;
+  getUpdatedAt() {
+    return this.updatedAt;
   }
 
-  set updatedAt(value) {
-    this._updatedAt = value;
+  setUpdatedAt(value) {
+    this.updatedAt = new Date(value);
   }
 }
 

@@ -2,22 +2,63 @@ import React, { useState } from "react";
 import Dropdown from "../../Components/Dropdown";
 import DatepickerReact from "../../Components/DatepickerReact";
 import TextareaInput from "../../Components/TextareaInput";
+import SubmitHeader from "../../Components/SubmitHeader";
+import { createGoalsData } from "../../Services/goalsService";
+import { createPlanData } from "../../Services/planService";
+import { createStatusData } from "../../Services/statusService";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import Goals from "../../Model/Goals";
+import Plan from "../../Model/Plan";
+import Status from "../../Model/Status";
 
 export default function AddEDP() {
   let typeUser = "User";
+  const { user } = useAuthContext();
+
   const [longTermGoal, setLongTermGoal] = useState("");
   const [shortTermGoal, setShortTermGoal] = useState("");
   const [competencyCluster, setCompetencyCluster] = useState("");
   const [intervention, setIntervention] = useState("");
-  const [gapsToAddress, setGapsToAddress] = useState("");
-  const [gapsClosure, setGapsClosure] = useState("");
+  const [competencyAddress, setCompetencyAddress] = useState("");
+  const [actionPlan, setActionPlan] = useState("");
   const [dueDate, setDueDate] = useState(null);
-  const [agreementDate, setAgreementDate] = useState(null);
+  const [dateAgreement, setDateAgreement] = useState(null);
+  const [dateReview, setDateReview] = useState(null);
   const [status, setStatus] = useState("");
   const [remarks, setRemarks] = useState("");
 
+  const handleSubmit = async () => {
+    let goalsData = new Goals(
+      null,
+      longTermGoal,
+      shortTermGoal,
+      user.Staff_Email
+    );
+    let planData = new Plan(
+      null,
+      competencyAddress,
+      competencyCluster,
+      actionPlan,
+      intervention,
+      remarks
+    );
+    let statusData = new Status(
+      null,
+      status,
+      dueDate,
+      dateAgreement,
+      dateReview,
+      null,
+      user.Staff_Email
+    );
+    await createGoalsData(goalsData);
+    await createPlanData(planData);
+    await createStatusData(statusData);
+  };
+
   return (
-    <div>
+    <div className="pt-24">
+      <SubmitHeader onSubmit={handleSubmit} />
       <header className="bg-white shadow">
         <div className="mx-auto px-2 py-4 sm:px-4 lg:px-6">
           <h1 className="text-lg font-bold tracking-tight text-gray-900">
@@ -74,17 +115,16 @@ export default function AddEDP() {
             <div className="w-1/2 p-4">
               <TextareaInput
                 label="Gaps to Address"
-                onChangeData={setGapsToAddress}
+                onChangeData={setCompetencyAddress}
               />
-              <div>Gaps to Address: {gapsToAddress}</div>
-
+              <div>Gaps to Address: {competencyAddress}</div>
             </div>
             <div className="w-1/2 p-4">
               <TextareaInput
                 label="Gaps Closure"
-                onChangeData={setGapsClosure}
+                onChangeData={setActionPlan}
               />
-              <div>Gaps Closure: {gapsClosure}</div>
+              <div>Gaps Closure: {actionPlan}</div>
             </div>
           </div>
 
@@ -116,8 +156,8 @@ export default function AddEDP() {
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <p className="text-m font-medium ">Agreement Date</p>
               </div>
-              <DatepickerReact onDateChange={(e) => setAgreementDate(e)} />
-              <div>Agreement Date: {agreementDate}</div>
+              <DatepickerReact onDateChange={setDateAgreement} />
+              <div>Agreement Date: {dateAgreement}</div>
             </div>
           </div>
           <div className="flex flex-row">
@@ -126,6 +166,13 @@ export default function AddEDP() {
               <div>
                 Remarks: <div dangerouslySetInnerHTML={{ __html: remarks }} />
               </div>
+            </div>
+            <div className="w-1/2 p-4">
+              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <p className="text-m font-medium ">Review Date</p>
+              </div>
+              <DatepickerReact onDateChange={setDateReview} />
+              <div>Review Date: {dateReview}</div>
             </div>
           </div>
         </div>

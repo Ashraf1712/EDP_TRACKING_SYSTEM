@@ -1,96 +1,106 @@
 class Status {
+  statusID = null;
+  status = null;
+  dueDate = null;
+  dateAgreement = null;
+  dateReview = null;
+  goalsID = null;
+  updatedBy = null;
+  createdAt = null;
+  updatedAt = null;
+
   constructor(
-    statusID,
-    status,
-    dueDate,
-    dateAgreement,
-    dateReview,
-    goalsID,
-    updatedBy,
-    createdAt,
-    updatedAt
+    _statusID,
+    _status,
+    _dueDate,
+    _dateAgreement,
+    _dateReview,
+    _goalsID,
+    _updatedBy,
+    _createdAt,
+    _updatedAt
   ) {
-    this._statusID = statusID;
-    this._status = status;
-    this._dueDate = new Date(dueDate);
-    this._dateAgreement = dateAgreement ? new Date(dateAgreement) : null;
-    this._dateReview = dateReview ? new Date(dateReview) : null;
-    this._goalsID = goalsID;
-    this._updatedBy = updatedBy;
-    this._createdAt = new Date(createdAt);
-    this._updatedAt = new Date(updatedAt);
+    this.statusID = _statusID;
+    this.status = _status;
+    this.dueDate = new Date(_dueDate);
+    this.dateAgreement = _dateAgreement ? new Date(_dateAgreement) : null;
+    this.dateReview = _dateReview ? new Date(_dateReview) : null;
+    this.goalsID = _goalsID;
+    this.updatedBy = _updatedBy;
+    this.createdAt = new Date(_createdAt);
+    this.updatedAt = new Date(_updatedAt);
   }
 
-  get statusID() {
-    return this._statusID;
+  getStatusID() {
+    return this.statusID;
   }
 
-  set statusID(value) {
-    this._statusID = value;
+  setStatusID(value) {
+    this.statusID = value;
   }
 
-  get status() {
-    return this._status;
+  getStatus() {
+    return this.status;
   }
 
-  set status(value) {
-    this._status = value;
+  setStatus(value) {
+    this.status = value;
   }
 
-  get dueDate() {
-    return this._dueDate;
+  getDueDate() {
+    return this.dueDate;
   }
 
-  set dueDate(value) {
-    this._dueDate = value;
+  setDueDate(value) {
+    this.dueDate = value;
   }
 
-  get dateAgreement() {
-    return this._dateAgreement;
+  getDateAgreement() {
+    return this.dateAgreement;
   }
 
-  set dateAgreement(value) {
-    this._dateAgreement = value;
+  setDateAgreement(value) {
+    this.dateAgreement = value;
   }
 
-  get dateReview() {
-    return this._dateReview;
+  getDateReview() {
+    return this.dateReview;
   }
 
-  set dateReview(value) {
-    this._dateReview = value;
+  setDateReview(value) {
+    this.dateReview = value;
   }
 
-  get goalsID() {
-    return this._goalsID;
+  getGoalsID() {
+    return this.goalsID;
   }
 
-  set goalsID(value) {
-    this._goalsID = value;
+  setGoalsID(value) {
+    this.goalsID = value;
   }
 
-  get updatedBy() {
-    return this._updatedBy;
+  getUpdatedBy() {
+    return this.updatedBy;
   }
 
-  set updatedBy(value) {
-    this._updatedBy = value;
+  setUpdatedBy(value) {
+    this.updatedBy = value;
   }
 
-  get createdAt() {
-    return this._createdAt;
+  getCreatedAt() {
+    return this.createdAt;
   }
 
-  set createdAt(value) {
-    this._createdAt = value;
+  setCreatedAt(value) {
+    this.createdAt = new Date(value);
   }
 
-  get updatedAt() {
-    return this._updatedAt;
+  getUpdatedAt() {
+    return this.updatedAt;
   }
 
-  set updatedAt(value) {
-    this._updatedAt = value;
+  setUpdatedAt(value) {
+    this.updatedAt = new Date(value);
   }
 }
 

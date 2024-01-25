@@ -3,7 +3,6 @@ const Goals = require('../models/Goals');
 //Goals
 const createGoalsData = async(req, res) => {
     const { goals } = req.body;
-
     try {
         const goalsData = await Goals.createGoals(goals)
         res.status(200).json({ goalsData })

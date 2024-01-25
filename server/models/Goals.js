@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
+const { generateUniquePlanID, generateUniqueGoalsID, generateUniqueStatusID } = require('./idGenerator');
+
 
 const goalsSchema = new mongoose.Schema({
     Goals_ID: {
@@ -37,25 +38,16 @@ const goalsSchema = new mongoose.Schema({
     }
 }, { collection: 'Goals' });
 
-// Helper function to generate a unique Goals_ID
-async function generateUniqueGoalsID() {
-    const existingGoals = await this.find().sort({ Goals_ID: -1 }).limit(1);
-    let lastGoalsID = existingGoals.length > 0 ? existingGoals[0].Goals_ID : 'GLS/2024/0000';
-    let [, year, lastNumber] = lastGoalsID.match(/(\d{4})\/(\d+)/);
-
-    if (parseInt(lastNumber) === 9999) {
-        year = (parseInt(year) + 1).toString();
-        lastNumber = '0000';
-    }
-
-    const nextNumber = (parseInt(lastNumber) + 1).toString().padStart(4, '0');
-    return `GLS/${year}/${nextNumber}`;
-}
-
 // Add a pre-save hook to generate Goals_ID before saving
-goalsSchema.pre('save', function(next) {
+goalsSchema.pre('save', async function(next) {
+    if (!this.Status_ID) {
+        this.Status_ID = await generateUniqueStatusID();
+    }
     if (!this.Goals_ID) {
-        this.Goals_ID = generateUniqueGoalsID.call(this);
+        this.Goals_ID = await generateUniqueGoalsID();
+    }
+    if (!this.Plan_ID) {
+        this.Plan_ID = await generateUniquePlanID();
     }
     next();
 });
@@ -63,17 +55,17 @@ goalsSchema.pre('save', function(next) {
 //Static create goals
 goalsSchema.statics.createGoals = async function(goals) {
     //Validation
-    if (!goals.staffEmail || !goals.statusID || !goals.planID) {
+    if (!goals.staffEmail) {
         throw new Error('Something wrong with the data');
     }
 
     const goalsData = await this.create({
-        Goals_ID: await generateUniqueGoalsID.call(mongoose.model('Goals')),
-        Goals_Longterm: goals.goalsLongTerm,
-        Goals_Shortterm: goals.goalsShortTerm,
+        Goals_ID: await generateUniqueGoalsID(),
+        Goals_Longterm: goals.goalsLongterm,
+        Goals_Shortterm: goals.goalsShortterm,
         Staff_Email: goals.staffEmail,
-        Status_ID: goals.statusID,
-        Plan_ID: goals.planID,
+        Status_ID: await generateUniqueStatusID(),
+        Plan_ID: await generateUniquePlanID(),
     })
 
 
