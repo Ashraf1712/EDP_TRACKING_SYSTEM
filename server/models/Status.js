@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { generateUniquePlanID, generateUniqueGoalsID, generateUniqueStatusID } = require('./idGenerator');
 
 
 const statusSchema = new mongoose.Schema({
@@ -41,16 +40,34 @@ const statusSchema = new mongoose.Schema({
     }
 }, { collection: 'Status' });
 
-// Add a pre-save hook to generate Status_ID before saving
-statusSchema.pre('save', async function(next) {
-    if (!this.Status_ID) {
-        this.Status_ID = await generateUniqueStatusID();
+// Helper function to generate a unique Status_ID
+async function generateUniqueStatusID() {
+    const existingStatuses = await this.find().sort({ Status_ID: -1 }).limit(1);
+    let lastStatusID = existingStatuses.length > 0 ? existingStatuses[0].Status_ID : 'STS-0000';
+    let [, lastNumber] = lastStatusID.match(/(\d+)/);
+
+    if (parseInt(lastNumber) === 9999) {
+        lastNumber = '0000';
     }
-    if (!this.Goals_ID) {
-        this.Goals_ID = await generateUniqueGoalsID();
+
+    const nextNumber = (parseInt(lastNumber) + 1).toString().padStart(4, '0');
+    return `STS-${nextNumber}`;
+}
+
+// Define the generateUniqueGoalsID function
+async function generateUniqueGoalsID() {
+    const existingGoals = await this.find().sort({ Goals_ID: -1 }).limit(1);
+    let lastGoalsID = existingGoals.length > 0 ? existingGoals[0].Goals_ID : 'GLS/2024/0000';
+    let [, year, lastNumber] = lastGoalsID.match(/(\d{4})\/(\d+)/);
+
+    if (parseInt(lastNumber) === 9999) {
+        year = (parseInt(year) + 1).toString();
+        lastNumber = '0000';
     }
-    next();
-});
+
+    const nextNumber = (parseInt(lastNumber) + 1).toString().padStart(4, '0');
+    return `GLS/${year}/${nextNumber}`;
+}
 
 
 //Static create plan
@@ -60,13 +77,16 @@ statusSchema.statics.createStatus = async function(status) {
         throw new Error('Something wrong with the data');
     }
 
+    const uniqueStatusID = await generateUniqueStatusID.call(this);
+    const uniqueGoalsID = await generateUniqueGoalsID.call(this);
+
     const statusData = await this.create({
-        Status_ID: await generateUniqueStatusID(),
+        Status_ID: uniqueStatusID,
         Status: status.status,
         Due_Date: status.dueDate,
         Date_Agreement: status.dateAgreement,
         Date_Review: status.dateReview,
-        Goals_ID: await generateUniqueGoalsID(),
+        Goals_ID: uniqueGoalsID,
         updated_by: status.updatedBy,
     })
 
