@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Plan = require('./Plan')
+const Status = require('./Status')
 
 
 const goalsSchema = new mongoose.Schema({
@@ -108,20 +110,46 @@ goalsSchema.statics.createGoals = async function(goals) {
 
 //static get goals 
 goalsSchema.statics.getGoalsByEmail = async function({ staffEmail }) {
-    //validation
-    if (!staffEmail) {
-        throw new Error('Something wrong with the data');
-    }
+    try {
+        // Get goals data by staff email
+        const edp = await this.find({ Staff_Email: staffEmail }).exec();
 
-    //Get Goals
-    const allGoalsDataArray = await this.find({ Staff_Email: staffEmail }).exec();
-    if (!allGoalsDataArray) {
-        throw new Error('Theres Something wrong with the server');
-    }
+        // Format the data as needed
+        const formattedGoals = await Promise.all(edp.map(async(goal) => {
+            // Populate Plan data
+            const planData = await Plan.findOne({ Plan_ID: goal.Plan_ID })
+                .select(['Competency_Address', 'Competency_Cluster', 'Action_Plan', 'Intervention', 'Remarks'])
+                .exec();
 
-    return allGoalsDataArray;
+            // Populate Status data
+            const statusData = await Status.findOne({ Status_ID: goal.Status_ID })
+                .select(['Status', 'Due_Date', 'Date_Agreement', 'Date_Review', 'updated_by'])
+                .exec();
+
+            return {
+                goalsID: goal.Goals_ID,
+                goalLongterm: goal.Goals_Longterm,
+                goalShortterm: goal.Goals_Shortterm,
+                competencyAddress: planData ? planData.Competency_Address : null,
+                competencyCluster: planData ? planData.Competency_Cluster : null,
+                actionPlan: planData ? planData.Action_Plan : null,
+                intervention: planData ? planData.Intervention : null,
+                remarks: planData ? planData.Remarks : null,
+                status: statusData ? statusData.Status : null,
+                dueDate: statusData ? statusData.Due_Date : null,
+                dateAgreement: statusData ? statusData.Date_Agreement : null,
+                dateReview: statusData ? statusData.Date_Review : null,
+                updatedBy: statusData ? statusData.updated_by : null
+            };
+        }));
+
+        return formattedGoals;
+
+    } catch (error) {
+        console.error('Error fetching goals data:', error);
+        throw new Error('Internal Server Error');
+    }
 }
-
 
 
 module.exports = mongoose.model('Goals', goalsSchema);

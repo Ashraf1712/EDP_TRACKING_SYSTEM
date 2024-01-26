@@ -1,11 +1,3 @@
-// services/planService.js
-import axios from "axios";
-
-const getPlanData = async () => {
-  const response = await axios.get("/api/plan/getPlan");
-  return response.data;
-};
-
 const createPlanData = async (planData) => {
   try {
     const response = await fetch("/api/plan/createPlan", {
@@ -37,4 +29,4 @@ const createPlanData = async (planData) => {
   }
 };
 
-export { getPlanData, createPlanData };
+export { createPlanData };

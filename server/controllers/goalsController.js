@@ -16,7 +16,7 @@ const getGoalsData = async(req, res) => {
 
     try {
         const goalsData = await Goals.getGoalsByEmail({ staffEmail })
-        res.status(200).json({ goalsData })
+        res.status(200).json(goalsData)
     } catch (error) {
         res.status(400).json({ error: error.message })
     }

@@ -1,9 +1,16 @@
-// services/goalsService.js
+// Example of the correct implementation
 import axios from "axios";
 
-const getGoalsData = async (staffEmail) => {
-  const response = await axios.get(`/api/goals/getGoals/${staffEmail}`);
-  return response.data;
+const getGoalsData = (staffEmail) => {
+  axios
+    .get(`/api/goals/getGoalsByEmail/${staffEmail}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error fetching goals data:", error);
+      throw error; // Re-throw the error to propagate it further
+    });
 };
 
 const createGoalsData = async (goalsData) => {

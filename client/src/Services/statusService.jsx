@@ -1,11 +1,3 @@
-// services/statusService.js
-import axios from "axios";
-
-const getStatusData = async () => {
-  const response = await axios.get("/api/status/getStatus");
-  return response.data;
-};
-
 const createStatusData = async (statusData) => {
   try {
     const response = await fetch("/api/status/createStatus", {
@@ -37,4 +29,4 @@ const createStatusData = async (statusData) => {
   }
 };
 
-export { getStatusData, createStatusData };
+export { createStatusData };

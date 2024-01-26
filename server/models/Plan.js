@@ -95,13 +95,13 @@ planSchema.statics.createPlan = async function(plan) {
 }
 
 //static get plan
-planSchema.statics.getPlanByGoalsID = async function(plan) {
+planSchema.statics.getPlanByGoalsID = async function({ goalsID }) {
     //validation
-    if (!plan.planID) {
+    if (!goalsID) {
         throw new Error('Something wrong with the data');
     }
 
-    const allPlanDataArray = await this.find({ Goals_ID: plan.goalsID }).toArray();
+    const allPlanDataArray = await this.find({ Goals_ID: goalsID }).exec();
     if (!allPlanDataArray) {
         throw new Error('Theres Something wrong with the server');
     }

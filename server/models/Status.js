@@ -93,19 +93,5 @@ statusSchema.statics.createStatus = async function(status) {
     return statusData;
 }
 
-//static get plan
-statusSchema.statics.getStatusByGoalsID = async function(status) {
-    //validation
-    if (!status.goalsID) {
-        throw new Error('Something wrong with the data');
-    }
-
-    const allStatusData = await this.find({ Goals_ID: status.goalsID }).toArray();
-    if (!allStatusData) {
-        throw new Error('Theres Something wrong with the server');
-    }
-
-    return allStatusData;
-}
 
 module.exports = mongoose.model('Status', statusSchema);
