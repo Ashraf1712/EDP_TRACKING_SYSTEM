@@ -1,37 +1,24 @@
-import { useEffect, useState } from "react";
 import CountCard from "../Components/CountCard";
 import Table from "../Components/Table/Table";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { getGoalsData } from "../Services/goalsService";
-
+import { useEdpData } from "../hooks/useEdpData";
 export default function Homepage() {
   const { user } = useAuthContext();
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Call getGoalsData with staffEmail
-        const fetchData = await getGoalsData(user.Staff_Email);
-        setData(fetchData);
-        console.log("Goals Data:", fetchData);
-      } catch (error) {
-        console.error("Error fetching goals data:", error);
-      }
-    };
-
-    // Call the fetchData function
-    fetchData();
-  }, [user.Staff_Email]);
+  const data = useEdpData(user.Staff_Email);
 
   const headers = [
-    "Reference No.",
-    "Competency to Address",
-    "Action Plan",
-    "Due Date",
-    "Status",
-    "Date Review",
+    { id: "goalsID", header: "Reference No." },
+    { id: "competencyAddress", header: "Competency to Address" },
+    { id: "actionPlan", header: "Action Plan" },
+    { id: "dueDate", header: "Due Date", isDate: true },
+    { id: "status", header: "Status" },
+    { id: "dateReview", header: "Date Review", isDate: true },
   ];
+
+  const badge = [
+    "competencyCluster",
+    "intervention"
+  ]
 
   return (
     <div>
@@ -121,7 +108,8 @@ export default function Homepage() {
         </div>
 
         <div className="w-full overflow-x-auto p-5">
-          <Table headers={headers} rows={data} />
+          <Table headers={headers} rows={data ? data : []} badge={badge} />
+          {/* <button onClick={handleFetchData}>Test</button> */}
         </div>
       </main>
     </div>

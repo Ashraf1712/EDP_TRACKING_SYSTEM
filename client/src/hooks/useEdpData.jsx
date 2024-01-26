@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { getGoalsData } from "../Services/goalsService";
-import { useAuthContext } from "../hooks/useAuthContext";
 
-export const useEdpData = () => {
-  const { user } = useAuthContext();
+export const useEdpData = (staffEmail) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -11,7 +9,7 @@ export const useEdpData = () => {
     const fetchData = async () => {
       console.log("Calling fetchData");
       try {
-        const fetchedData = await getGoalsData(user.Staff_Email);
+        const fetchedData = await getGoalsData(staffEmail);
         setData(fetchedData);
         console.log("Goals Data:", fetchedData);
       } catch (error) {
@@ -21,7 +19,7 @@ export const useEdpData = () => {
 
     // Call the fetchData function
     fetchData();
-  }, [user.Staff_Email]);
+  }, [staffEmail]);
 
   // Return the data from the state
   return data;

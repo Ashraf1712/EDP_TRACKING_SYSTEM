@@ -1,17 +1,27 @@
 // Example of the correct implementation
-import axios from "axios";
-
-const getGoalsData = (staffEmail) => {
-  axios
-    .get(`/api/goals/getGoalsByEmail/${staffEmail}`)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      console.error("Error fetching goals data:", error);
-      throw error; // Re-throw the error to propagate it further
+const getGoalsData = async (staffEmail) => {
+  try {
+    const response = await fetch(`/api/goals/getGoalsByEmail/${staffEmail}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
+    if (!response.ok) {
+      const json = await response.json();
+      console.error(json.error);
+      return; // Make sure to handle error cases
+    }
+
+    const data = await response.json();
+    if (response.ok) {
+      return data;
+    }
+  } catch (error) {
+    console.error("Error fetching goals data:", error);
+  }
 };
+
 
 const createGoalsData = async (goalsData) => {
   try {
