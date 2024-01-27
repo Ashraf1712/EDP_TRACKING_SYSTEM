@@ -9,7 +9,7 @@ function SubmitHeader({ onSubmit }) {
   };
 
   return (
-    <div className="bg-petronas-purple fixed top-16 w-full z-50 h-10 flex justify-end items-center gap-2 px-4">
+    <div className="bg-petronas-purple fixed top-16 w-full z-40 h-10 flex justify-end items-center gap-2 px-4">
       <button className="btn btn-xs sm:btn-sm md:btn-sm lg:btn-sm text-white">
         Cancel
       </button>

@@ -8,17 +8,13 @@ export default function Homepage() {
 
   const headers = [
     { id: "goalsID", header: "Reference No." },
-    { id: "competencyAddress", header: "Competency to Address" },
-    { id: "actionPlan", header: "Action Plan" },
+    { id: "competencyAddress", header: "Competency to Address", badge: "competencyCluster" },
+    { id: "actionPlan", header: "Action Plan", badge: "intervention" },
     { id: "dueDate", header: "Due Date", isDate: true },
     { id: "status", header: "Status" },
     { id: "dateReview", header: "Date Review", isDate: true },
   ];
 
-  const badge = [
-    "competencyCluster",
-    "intervention"
-  ]
 
   return (
     <div>
@@ -108,7 +104,7 @@ export default function Homepage() {
         </div>
 
         <div className="w-full overflow-x-auto p-5">
-          <Table headers={headers} rows={data ? data : []} badge={badge} />
+          <Table headers={headers} rows={data ? data : []} />
           {/* <button onClick={handleFetchData}>Test</button> */}
         </div>
       </main>

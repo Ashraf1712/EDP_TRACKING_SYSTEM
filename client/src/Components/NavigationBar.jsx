@@ -34,11 +34,10 @@ function NavigationBar() {
                 <div className="ml-10 flex items-baseline space-x-4">
                   <a
                     href="/"
-                    className={`${
-                      window.location.pathname === "/"
-                        ? "bg-gray-900 text-white"
-                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                    } rounded-md px-3 py-2 text-sm font-medium`}
+                    className={`${window.location.pathname === "/"
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                      } rounded-md px-3 py-2 text-sm font-medium`}
                   >
                     Homepage
                   </a>
@@ -50,11 +49,10 @@ function NavigationBar() {
                   </a>
                   <a
                     href="/edp-add"
-                    className={`${
-                      window.location.pathname === "/edp-add"
-                        ? "bg-gray-900 text-white"
-                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                    } rounded-md px-3 py-2 text-sm font-medium`}
+                    className={`${window.location.pathname === "/edp-add"
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                      } rounded-md px-3 py-2 text-sm font-medium`}
                   >
                     Add EDP
                   </a>
@@ -112,7 +110,7 @@ function NavigationBar() {
                   {isUserMenuOpen && (
                     <div
                       id="user-menu"
-                      className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      className="z-999 absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none "
                       role="menu"
                       aria-orientation="vertical"
                       aria-labelledby="user-menu-button"
