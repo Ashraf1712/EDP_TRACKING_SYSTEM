@@ -5,8 +5,6 @@ export const useEdpData = (staffEmail) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    console.log("Effect executed!");
-
     let isMounted = true;
 
     const fetchData = async () => {

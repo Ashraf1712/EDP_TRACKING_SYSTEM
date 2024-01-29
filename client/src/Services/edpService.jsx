@@ -1,6 +1,6 @@
 const createEDPData = async (staffEmail) => {
     try {
-        const response = await fetch("/api/edp/createEDP", {
+        const response = await fetch(`/api/edp/createEDP`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

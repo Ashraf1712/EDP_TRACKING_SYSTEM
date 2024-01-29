@@ -9,8 +9,8 @@ const {
 } = require('../controllers/edpController.js')
 
 //goals module
-router.post('/createEDP/:staffEmail', createEDPData)
+router.post('/createEDP', createEDPData)
 router.get('/getEDPByEmail/:staffEmail', getEDPData)
-    // router.put('/updateEDP', updateEDPData)
+router.put('/updateEDP', updateEDPData)
 
 module.exports = router;

@@ -10,6 +10,7 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import Goals from "../../Model/Goals";
 import Plan from "../../Model/Plan";
 import Status from "../../Model/Status";
+import { createEDPData } from "../../Services/edpService";
 
 export default function AddEDP() {
   let typeUser = "User";
@@ -32,7 +33,6 @@ export default function AddEDP() {
       null,
       longTermGoal,
       shortTermGoal,
-      user.Staff_Email
     );
     let planData = new Plan(
       null,
@@ -48,9 +48,8 @@ export default function AddEDP() {
       dueDate,
       dateAgreement,
       dateReview,
-      null,
-      user.Staff_Email
     );
+    await createEDPData(user.Staff_Email);
     await createGoalsData(goalsData);
     await createPlanData(planData);
     await createStatusData(statusData);

@@ -99,5 +99,95 @@ edpSchema.statics.getEDPByEmail = async function({ staffEmail }) {
     }
 }
 
+async function updateGoals(edpID, updatedData) {
+    return await Goals.findOneAndUpdate({ EDP_ID: edpID }, {
+        $set: {
+            Goals_Longterm: updatedData.goalLongterm,
+            Goals_Shortterm: updatedData.goalShortterm,
+        }
+    }, { new: true });
+}
+
+async function updatePlan(edpID, updatedData) {
+    return await Plan.findOneAndUpdate({ EDP_ID: edpID }, {
+        $set: {
+            Competency_Address: updatedData.competencyAddress,
+            Competency_Cluster: updatedData.competencyCluster,
+            Action_Plan: updatedData.actionPlan,
+            Intervention: updatedData.intervention,
+            Remarks: updatedData.remarks,
+        }
+    }, { new: true });
+}
+
+async function updateStatus(edpID, updatedData) {
+    return await Status.findOneAndUpdate({ EDP_ID: edpID }, {
+        $set: {
+            Status: updatedData.status,
+            Due_Date: updatedData.dueDate,
+            Date_Agreement: updatedData.dateAgreement,
+            Date_Review: updatedData.dateReview,
+        }
+    }, { new: true });
+}
+
+
+edpSchema.statics.updateEDPByID = async function(updatedData) {
+    // Validation
+    if (!updatedData) {
+        throw new Error('Something wrong with the data');
+    }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const updatedEDPResult = await this.findOneAndUpdate({ EDP_ID: updatedData.edpID }, {
+            $set: {
+                updated_by: updatedData.staffEmail,
+                updated_at: Date.now(),
+            }
+        }, { new: true });
+
+        const updateGoalsResult = await updateGoals(updatedData.edpID, updatedData);
+        const updatePlanResult = await updatePlan(updatedData.edpID, updatedData);
+        const updateStatusResult = await updateStatus(updatedData.edpID, updatedData);
+
+        const allResults = {
+            edpID: updatedEDPResult.EDP_ID,
+            updated_by: updatedEDPResult.updated_by,
+            goalsLongterm: updateGoalsResult ? updateGoalsResult.Goals_Longterm : null,
+            goalsShortterm: updateGoalsResult ? updateGoalsResult.Goals_Shortterm : null,
+            competencyAddress: updatePlanResult ? updatePlanResult.Competency_Address : null,
+            competencyCluster: updatePlanResult ? updatePlanResult.Competency_Cluster : null,
+            actionPlan: updatePlanResult ? updatePlanResult.Action_Plan : null,
+            intervention: updatePlanResult ? updatePlanResult.Intervention : null,
+            remarks: updatePlanResult ? updatePlanResult.Remarks : null,
+            status: updateStatusResult ? updateStatusResult.Status : null,
+            dueDate: updateStatusResult ? updateStatusResult.Due_Date : null,
+            dateAgreement: updateStatusResult ? updateStatusResult.Date_Agreement : null,
+            dateReview: updateStatusResult ? updateStatusResult.Date_Review : null,
+        };
+
+        if (updatedEDPResult && updateGoalsResult && updatePlanResult && updateStatusResult) {
+            console.log('All documents updated successfully');
+            await session.commitTransaction();
+            session.endSession();
+            return allResults;
+        } else {
+            console.log('Some documents not found');
+            throw new Error('Some documents not found');
+        }
+    } catch (error) {
+        console.error('Error updating documents:', error);
+        await session.abortTransaction();
+        session.endSession();
+        throw error;
+    }
+};
+
+
+
+
 
 module.exports = mongoose.model('EDP', edpSchema);
