@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 
-const DatepickerReact = ({ onDateChange }) => {
+const DatepickerReact = ({ onDateChange, dateValue }) => {
+
+  const initialDate = dateValue
+    ? new Date(dateValue) // Convert string to Date object
+    : new Date();
   const [value, setValue] = useState({
-    startDate: new Date(),
+    startDate: initialDate.toISOString().split('T')[0], // Extract date part
   });
+
+  console.log("dateValue:", value.startDate);
 
   const handleValueChange = (newValue) => {
     console.log("newValue:", newValue);
@@ -16,7 +22,7 @@ const DatepickerReact = ({ onDateChange }) => {
     <Datepicker
       useRange={false}
       asSingle={true}
-      value={value}
+      value={new Date("2024-01-29")}
       onChange={handleValueChange}
       placeholder="Select a date"
       displayFormat="DD/MM/YYYY"

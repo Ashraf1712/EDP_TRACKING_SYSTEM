@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 const { generateUniqueID } = require('../utils/utils');
-const Plan = require('./Plan')
-const Status = require('./Status')
 
 const goalsSchema = new mongoose.Schema({
     Goals_Longterm: {

@@ -1,10 +1,10 @@
 import CountCard from "../Components/CountCard";
 import Table from "../Components/Table/Table";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useEdpData } from "../hooks/useEdpData";
+import { useEDPData } from "../hooks/useEDPData";
 export default function Homepage() {
   const { user } = useAuthContext();
-  const data = useEdpData(user.Staff_Email);
+  const data = useEDPData(user.Staff_Email);
 
   const headers = [
     { id: "edpID", header: "Reference No." },

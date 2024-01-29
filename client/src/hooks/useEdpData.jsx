@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getEDPData } from "../Services/edpService";
 
-export const useEdpData = (staffEmail) => {
+export const useEDPData = (staffEmail) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {

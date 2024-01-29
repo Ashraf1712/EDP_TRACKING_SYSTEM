@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const { generateUniqueID } = require('../utils/utils');
 
 const statusSchema = new mongoose.Schema({
     Status: {
@@ -23,21 +23,6 @@ const statusSchema = new mongoose.Schema({
     },
 }, { collection: 'Status' });
 
-// Define the generateUniqueGoalsID function
-async function generateUniqueEDPID() {
-    const existingGoals = await this.find().sort({ EDP_ID: -1 }).limit(1);
-    let lastEDPID = existingGoals.length > 0 ? existingGoals[0].EDP_ID : 'EDP/2024/0000';
-    let [, year, lastNumber] = lastEDPID.match(/(\d{4})\/(\d+)/);
-
-    if (parseInt(lastNumber) === 9999) {
-        year = (parseInt(year) + 1).toString();
-        lastNumber = '0000';
-    }
-
-    const nextNumber = (parseInt(lastNumber) + 1).toString().padStart(4, '0');
-    return `EDP/${year}/${nextNumber}`;
-}
-
 
 //Static create plan
 statusSchema.statics.createStatus = async function(status) {
@@ -46,8 +31,7 @@ statusSchema.statics.createStatus = async function(status) {
         throw new Error('Something wrong with the data');
     }
 
-    const uniqueEDPID = await generateUniqueEDPID.call(this);
-
+    const uniqueEDPID = await generateUniqueID(this, 'EDP_ID');
 
     const statusData = await this.create({
         Status: status.status,

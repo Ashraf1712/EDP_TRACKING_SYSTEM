@@ -4,13 +4,15 @@ const router = express.Router();
 //controller functions
 const {
     createEDPData,
-    getEDPData,
+    getEDPDataByEmail,
+    getEDPDataByID,
     updateEDPData,
 } = require('../controllers/edpController.js')
 
 //goals module
 router.post('/createEDP', createEDPData)
-router.get('/getEDPByEmail/:staffEmail', getEDPData)
+router.get('/getEDPByEmail/:staffEmail', getEDPDataByEmail)
+router.get('/getEDPByID/:edpID', getEDPDataByID)
 router.put('/updateEDP', updateEDPData)
 
 module.exports = router;

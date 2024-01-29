@@ -6,6 +6,7 @@ import Register from '../View/Auth/Register';
 import Login from '../View/Auth/Login';
 import Homepage from '../View/Homepage';
 import AddEDP from '../View/EDP/AddEDP';
+import UpdateEDP from '../View/EDP/UpdateEDP';
 
 function Routing() {
   const { user, isLoading } = useAuthContext();
@@ -39,6 +40,7 @@ function Routing() {
                 element={<Navigate to="/" />}
               />
               <Route path="/edp-add" element={<AddEDP />} />
+              <Route path="/edpDetails/:edpID" element={<UpdateEDP />} />
             </>
           ) : (
             <>

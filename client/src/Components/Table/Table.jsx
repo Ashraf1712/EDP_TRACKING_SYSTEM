@@ -11,7 +11,7 @@ function Table({ headers, rows }) {
       <tbody>
         <TableHeader headers={headers} />
         {rows.map((rowData, rowIndex) => (
-          <TableRow key={rowIndex} headers={headers} data={rowData} />
+          <TableRow key={rowIndex} headers={headers} data={rowData} href={`/edpDetails/${rowData.edpID}`} />
         ))}
       </tbody>
     </table>

@@ -52,10 +52,10 @@ edpSchema.statics.createEDP = async function({ staffEmail }) {
 edpSchema.statics.getEDPByEmail = async function({ staffEmail }) {
     try {
         // Get EDP data by staff email
-        const edp = await this.find({ created_by: staffEmail }).exec();
+        const edpData = await this.find({ created_by: staffEmail }).exec();
 
         // Extract EDP IDs from the fetched EDP data
-        const edpIDs = edp.map(edp => edp.EDP_ID);
+        const edpIDs = edpData.map(edpData => edpData.EDP_ID);
 
         // Fetch related Goals, Plan, and Status data using a single Promise.all
         const relatedData = await Promise.all(edpIDs.map(async(EDP_ID) => {
@@ -71,7 +71,7 @@ edpSchema.statics.getEDPByEmail = async function({ staffEmail }) {
         }));
 
         // Format the data as needed
-        const formattedGoals = edp.map((edpData, index) => {
+        const formattedGoals = edpData.map((edpData, index) => {
             const { goalsData, planData, statusData } = relatedData[index];
 
             return {
@@ -97,6 +97,47 @@ edpSchema.statics.getEDPByEmail = async function({ staffEmail }) {
         console.error('Error fetching goals data:', error);
         throw new Error('Internal Server Error');
     }
+}
+
+// //static get goals 
+edpSchema.statics.getEDPByID = async function({ edpID }) {
+    try {
+        // Get EDP data by EDP_ID
+        const edpData = await this.findOne({ EDP_ID: edpID }).exec();
+
+        if (!edpData) {
+            throw new Error('EDP document not found');
+        }
+
+        // Fetch related Goals, Plan, and Status data
+        const goalsData = await Goals.findOne({ EDP_ID: edpData.EDP_ID }).select(['Goals_Longterm', 'Goals_Shortterm']).exec();
+        const planData = await Plan.findOne({ EDP_ID: edpData.EDP_ID }).select(['Competency_Address', 'Competency_Cluster', 'Action_Plan', 'Intervention', 'Remarks']).exec();
+        const statusData = await Status.findOne({ EDP_ID: edpData.EDP_ID }).select(['Status', 'Due_Date', 'Date_Agreement', 'Date_Review']).exec();
+
+        // Format the data as needed
+        const formattedData = {
+            edpID: edpData.EDP_ID,
+            updated_by: edpData.updated_by,
+            goalsLongterm: goalsData ? goalsData.Goals_Longterm : null,
+            goalsShortterm: goalsData ? goalsData.Goals_Shortterm : null,
+            competencyAddress: planData ? planData.Competency_Address : null,
+            competencyCluster: planData ? planData.Competency_Cluster : null,
+            actionPlan: planData ? planData.Action_Plan : null,
+            intervention: planData ? planData.Intervention : null,
+            remarks: planData ? planData.Remarks : null,
+            status: statusData ? statusData.Status : null,
+            dueDate: statusData ? statusData.Due_Date : null,
+            dateAgreement: statusData ? statusData.Date_Agreement : null,
+            dateReview: statusData ? statusData.Date_Review : null,
+        };
+
+        return formattedData;
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw new Error('Internal Server Error');
+    }
+
 }
 
 async function updateGoals(edpID, updatedData) {

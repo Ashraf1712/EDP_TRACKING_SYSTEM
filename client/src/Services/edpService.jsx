@@ -46,4 +46,27 @@ const getEDPData = async (staffEmail) => {
     }
 };
 
-export { createEDPData, getEDPData };
+const getEDPDataByID = async (edpID) => {
+    try {
+        const response = await fetch(`/api/edp/getEDPByID/${edpID}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!response.ok) {
+            const json = await response.json();
+            console.error(json.error);
+            return; // Make sure to handle error cases
+        }
+
+        const data = await response.json();
+        if (response.ok) {
+            return data;
+        }
+    } catch (error) {
+        console.error("Error fetching EDP data:", error);
+    }
+};
+
+export { createEDPData, getEDPData, getEDPDataByID };

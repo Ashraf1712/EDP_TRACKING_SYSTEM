@@ -11,10 +11,20 @@ const createEDPData = async(req, res) => {
     }
 }
 
-const getEDPData = async(req, res) => {
+const getEDPDataByEmail = async(req, res) => {
     const { staffEmail } = req.params;
     try {
         const edpData = await EDP.getEDPByEmail({ staffEmail })
+        res.status(200).json(edpData)
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+}
+
+const getEDPDataByID = async(req, res) => {
+    const { edpID } = req.params;
+    try {
+        const edpData = await EDP.getEDPByID({ edpID })
         res.status(200).json(edpData)
     } catch (error) {
         res.status(400).json({ error: error.message })
@@ -33,6 +43,7 @@ const updateEDPData = async(req, res) => {
 
 module.exports = {
     createEDPData,
-    getEDPData,
+    getEDPDataByEmail,
+    getEDPDataByID,
     updateEDPData
 }
