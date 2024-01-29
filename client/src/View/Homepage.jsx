@@ -7,9 +7,9 @@ export default function Homepage() {
   const data = useEdpData(user.Staff_Email);
 
   const headers = [
-    { id: "goalsID", header: "Reference No." },
-    { id: "competencyAddress", header: "Competency to Address", badge: "competencyCluster" },
-    { id: "actionPlan", header: "Action Plan", badge: "intervention" },
+    { id: "edpID", header: "Reference No." },
+    { id: "competencyAddress", header: "Competency to Address", badge: "competencyCluster", isHtml: true },
+    { id: "actionPlan", header: "Action Plan", badge: "intervention", isHtml: true },
     { id: "dueDate", header: "Due Date", isDate: true },
     { id: "status", header: "Status" },
     { id: "dateReview", header: "Date Review", isDate: true },
@@ -105,7 +105,6 @@ export default function Homepage() {
 
         <div className="w-full overflow-x-auto p-5">
           <Table headers={headers} rows={data ? data : []} />
-          {/* <button onClick={handleFetchData}>Test</button> */}
         </div>
       </main>
     </div>

@@ -21,7 +21,7 @@ function getCategoryColor(category) {
 
 
 function formatDate(date) {
-  return new Date(date).toLocaleDateString("en-GB", {
+  return !date ? "" : new Date(date).toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -34,27 +34,33 @@ function TableRow({ headers, data }) {
       {headers.map((header) => (
         <td
           key={header.id}
-          className={`h-12 px-6 text-sm transition duration-300 border-t border-l ${header.id === headers[0].id ? "first:border-l-0" : ""
+          className={`h-16 px-6 text-sm transition duration-300 border-t border-l ${header.id === headers[0].id ? "first:border-l-0" : ""
             } border-slate-200 stroke-slate-500 text-slate-500`}
         >
-          <>
-            {header.isDate ? (
-              <span>{formatDate(data[header.id])}</span>
-            ) : (
-              <div>
-                {data[header.id]}<br></br>
-                {header.badge && (
-                  <span className={`badge badge-ghost badge-sm text-white border-white ${getCategoryColor(data[header.badge])}`}>
-                    {data[header.badge]}
-                  </span>
-                )}
-              </div>
-            )}
-          </>
+          {header.isDate ? (
+            <span>{formatDate(data[header.id] || "")}</span>
+          ) : (
+            <div>
+              {header.isHtml ? (
+                <div dangerouslySetInnerHTML={{ __html: data[header.id] }} />
+              ) : (
+                <>
+                  {data[header.id]}<br />
+                </>
+              )}
+              {header.badge && (
+                <span className={`badge badge-ghost badge-sm text-white border-white ${getCategoryColor(data[header.badge])}`}>
+                  {data[header.badge]}
+                </span>
+              )}
+            </div>
+
+          )}
         </td>
       ))}
     </tr>
   );
+
 }
 
 export default TableRow;

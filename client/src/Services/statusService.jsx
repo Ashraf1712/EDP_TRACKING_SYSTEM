@@ -11,7 +11,6 @@ const createStatusData = async (statusData) => {
           dueDate: statusData.dueDate,
           dateAgreement: statusData.dateAgreement,
           dateReview: statusData.dateReview,
-          updatedBy: statusData.updatedBy,
         },
       }),
     });
@@ -22,7 +21,7 @@ const createStatusData = async (statusData) => {
       console.log(json.error);
     }
     if (response.ok) {
-      console.log("dead 3");
+      console.log("LESGO! STATUS CREATED");
     }
   } catch (error) {
     console.error("Error creating status data:", error);

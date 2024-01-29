@@ -1,26 +1,35 @@
 import { useEffect, useState } from "react";
-import { getGoalsData } from "../Services/goalsService";
+import { getEDPData } from "../Services/edpService";
 
 export const useEdpData = (staffEmail) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    console.log("Entering useEffect");
+    console.log("Effect executed!");
+
+    let isMounted = true;
+
     const fetchData = async () => {
-      console.log("Calling fetchData");
       try {
-        const fetchedData = await getGoalsData(staffEmail);
-        setData(fetchedData);
-        console.log("Goals Data:", fetchedData);
+        const fetchedData = await getEDPData(staffEmail);
+
+        if (isMounted) {
+          setData(fetchedData);
+          console.log("Goals Data:", fetchedData);
+        }
       } catch (error) {
         console.error("Error fetching goals data:", error);
       }
     };
 
-    // Call the fetchData function
-    fetchData();
+    if (staffEmail) {
+      fetchData();
+    }
+
+    return () => {
+      isMounted = false;
+    };
   }, [staffEmail]);
 
-  // Return the data from the state
   return data;
 };

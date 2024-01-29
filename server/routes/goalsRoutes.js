@@ -5,10 +5,12 @@ const router = express.Router();
 const {
     createGoalsData,
     getGoalsData,
+    updateGoalsData,
 } = require('../controllers/goalsController.js')
 
 //goals module
 router.post('/createGoals', createGoalsData)
-router.get('/getGoalsByEmail/:staffEmail', getGoalsData)
+    // router.get('/getGoalsByEmail/:staffEmail', getGoalsData)
+    // router.put('/updateGoals', updateGoalsData)
 
 module.exports = router;

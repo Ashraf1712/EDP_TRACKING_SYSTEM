@@ -1,14 +1,9 @@
 const mongoose = require('mongoose');
+const { generateUniqueID } = require('../utils/utils');
 const Plan = require('./Plan')
 const Status = require('./Status')
 
-
 const goalsSchema = new mongoose.Schema({
-    Goals_ID: {
-        type: String,
-        required: true,
-        unique: true,
-    },
     Goals_Longterm: {
         type: String,
         required: true,
@@ -17,139 +12,107 @@ const goalsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    Staff_Email: {
+    EDP_ID: {
         type: String,
         required: true,
-    },
-    Status_ID: {
-        type: String,
-        required: true,
-    },
-    Plan_ID: {
-        type: String,
-        required: true,
-    },
-    created_at: {
-        type: Date,
-        default: Date.now,
-    },
-    updated_at: {
-        type: Date,
-        default: Date.now,
+        unique: true,
     }
-}, { collection: 'Goals' });
+}, { collection: 'Goals' })
 
-// Helper function to generate a unique Plan_ID
-async function generateUniquePlanID() {
-    const existingPlans = await this.find().sort({ Plan_ID: -1 }).limit(1);
-    let lastPlanID = existingPlans.length > 0 ? existingPlans[0].Plan_ID : 'PLN-0000';
-    let [, lastNumber] = lastPlanID.match(/(\d+)/);
-
-    if (parseInt(lastNumber) === 9999) {
-        lastNumber = '0000';
-    }
-
-    const nextNumber = (parseInt(lastNumber) + 1).toString().padStart(4, '0');
-    return `PLN-${nextNumber}`;
-}
-
-
-// Helper function to generate a unique Status_ID
-async function generateUniqueStatusID() {
-    const existingStatuses = await this.find().sort({ Status_ID: -1 }).limit(1);
-    let lastStatusID = existingStatuses.length > 0 ? existingStatuses[0].Status_ID : 'STS-0000';
-    let [, lastNumber] = lastStatusID.match(/(\d+)/);
-
-    if (parseInt(lastNumber) === 9999) {
-        lastNumber = '0000';
-    }
-
-    const nextNumber = (parseInt(lastNumber) + 1).toString().padStart(4, '0');
-    return `STS-${nextNumber}`;
-}
-
-
-// Define the generateUniqueGoalsID function
-async function generateUniqueGoalsID() {
-    const existingGoals = await this.find().sort({ Goals_ID: -1 }).limit(1);
-    let lastGoalsID = existingGoals.length > 0 ? existingGoals[0].Goals_ID : 'GLS/2024/0000';
-    let [, year, lastNumber] = lastGoalsID.match(/(\d{4})\/(\d+)/);
-
-    if (parseInt(lastNumber) === 9999) {
-        year = (parseInt(year) + 1).toString();
-        lastNumber = '0000';
-    }
-
-    const nextNumber = (parseInt(lastNumber) + 1).toString().padStart(4, '0');
-    return `GLS/${year}/${nextNumber}`;
-}
 
 //Static create goals
 goalsSchema.statics.createGoals = async function(goals) {
     //Validation
-    if (!goals.staffEmail) {
+    if (!goals) {
         throw new Error('Something wrong with the data');
     }
 
-    const uniqueGoalsID = await generateUniqueGoalsID.call(this);
-    const uniquePlanID = await generateUniquePlanID.call(this);
-    const uniqueStatusID = await generateUniqueStatusID.call(this);
+    const uniqueEDPID = await generateUniqueID(this, 'EDP_ID');
 
     const goalsData = await this.create({
-        Goals_ID: uniqueGoalsID,
+        EDP_ID: uniqueEDPID,
         Goals_Longterm: goals.goalsLongterm,
         Goals_Shortterm: goals.goalsShortterm,
-        Staff_Email: goals.staffEmail,
-        Status_ID: uniqueStatusID,
-        Plan_ID: uniquePlanID,
     })
-
 
     return goalsData;
 }
 
-//static get goals 
-goalsSchema.statics.getGoalsByEmail = async function({ staffEmail }) {
-    try {
-        // Get goals data by staff email
-        const edp = await this.find({ Staff_Email: staffEmail }).exec();
 
-        // Format the data as needed
-        const formattedGoals = await Promise.all(edp.map(async(goal) => {
-            // Populate Plan data
-            const planData = await Plan.findOne({ Plan_ID: goal.Plan_ID })
-                .select(['Competency_Address', 'Competency_Cluster', 'Action_Plan', 'Intervention', 'Remarks'])
-                .exec();
+// async function updatePlan(planID, updatedData) {
+//     return await Plan.findOneAndUpdate({ Plan_ID: planID }, {
+//         $set: {
+//             Competency_Address: updatedData.competencyAddress,
+//             Competency_Cluster: updatedData.competencyCluster,
+//             Action_Plan: updatedData.actionPlan,
+//             Intervention: updatedData.intervention,
+//             Remarks: updatedData.remarks,
+//             updated_at: Date.now()
+//         }
+//     }, { new: true });
+// }
 
-            // Populate Status data
-            const statusData = await Status.findOne({ Status_ID: goal.Status_ID })
-                .select(['Status', 'Due_Date', 'Date_Agreement', 'Date_Review', 'updated_by'])
-                .exec();
+// async function updateStatus(statusID, updatedData) {
+//     return await Status.findOneAndUpdate({ Status_ID: statusID }, {
+//         $set: {
+//             Status: updatedData.status,
+//             Due_Date: updatedData.dueDate,
+//             Date_Agreement: updatedData.dateAgreement,
+//             Date_Review: updatedData.dateReview,
+//             updated_at: Date.now(),
+//             updated_by: updatedData.updatedBy
+//         }
+//     }, { new: true });
+// }
 
-            return {
-                goalsID: goal.Goals_ID,
-                goalLongterm: goal.Goals_Longterm,
-                goalShortterm: goal.Goals_Shortterm,
-                competencyAddress: planData ? planData.Competency_Address : null,
-                competencyCluster: planData ? planData.Competency_Cluster : null,
-                actionPlan: planData ? planData.Action_Plan : null,
-                intervention: planData ? planData.Intervention : null,
-                remarks: planData ? planData.Remarks : null,
-                status: statusData ? statusData.Status : null,
-                dueDate: statusData ? statusData.Due_Date : null,
-                dateAgreement: statusData ? statusData.Date_Agreement : null,
-                dateReview: statusData ? statusData.Date_Review : null,
-                updatedBy: statusData ? statusData.updated_by : null
-            };
-        }));
+// goalsSchema.statics.updateGoalsByID = async function(updatedData) {
+//     console.log(updatedData);
+//     // Validation
+//     if (!updatedData) {
+//         throw new Error('Something wrong with the data');
+//     }
 
-        return formattedGoals;
+//     try {
+//         const updateGoalsResult = await this.findOneAndUpdate({ Goals_ID: updatedData.goalsID }, {
+//             $set: {
+//                 Goals_Longterm: updatedData.goalLongterm,
+//                 Goals_Shortterm: updatedData.goalShortterm,
+//                 updated_at: Date.now()
+//             }
+//         }, { new: true });
 
-    } catch (error) {
-        console.error('Error fetching goals data:', error);
-        throw new Error('Internal Server Error');
-    }
-}
+//         if (updateGoalsResult) {
+//             console.log('Goals document updated successfully:', updateGoalsResult);
+
+//             const updatePlanResult = await updatePlan(updatedData.planID, updatedData);
+
+//             if (updatePlanResult) {
+//                 console.log('Plan document updated successfully:', updatePlanResult);
+
+//                 const updateStatusResult = await updateStatus(updatedData.statusID, updatedData);
+
+//                 if (updateStatusResult) {
+//                     console.log('Status document updated successfully:', updateStatusResult);
+//                     return updateGoalsResult;
+//                 } else {
+//                     console.log('Status document not found');
+//                     throw new Error('Status document not found');
+//                 }
+//             } else {
+//                 console.log('Plan document not found');
+//                 throw new Error('Plan document not found');
+//             }
+//         } else {
+//             console.log('Goals document not found');
+//             throw new Error('Goals document not found');
+//         }
+//     } catch (error) {
+//         console.error('Error updating documents:', error);
+//         throw error;
+//     }
+
+// };
+
 
 
 module.exports = mongoose.model('Goals', goalsSchema);

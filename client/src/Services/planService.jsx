@@ -22,7 +22,7 @@ const createPlanData = async (planData) => {
       console.log(json.error);
     }
     if (response.ok) {
-      console.log("dead 2");
+      console.log("LESGO! PLAN CREATED");
     }
   } catch (error) {
     console.error("Error creating plan data:", error);
