@@ -1,20 +1,28 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-function SubmitHeader({ onSubmit }) {
-  const handleSubmitClick = async (e) => {
-    if (onSubmit) {
-      e.preventDefault();
-      await onSubmit();
-    }
-  };
 
+function SubmitHeader({ onSubmit, onDelete }) {
+
+  const navigate = useNavigate();
+  const onCancel = () => {
+    navigate('/');
+  }
   return (
     <div className="bg-petronas-purple fixed top-16 w-full z-40 h-10 flex justify-end items-center gap-2 px-4">
-      <button className="btn btn-xs sm:btn-sm md:btn-sm lg:btn-sm text-white">
+      {/* TODO: ONLY ADMIN CAN DELETE */}
+      <button
+        onClick={onDelete}
+        className="btn btn-xs sm:btn-sm md:btn-sm lg:btn-sm text-white bg-red-500 hover:bg-red-600 border-white"
+      >
+        Delete
+      </button>
+
+      <button onClick={onCancel} className="btn btn-xs sm:btn-sm md:btn-sm lg:btn-sm text-white">
         Cancel
       </button>
       <button
-        onClick={(e) => handleSubmitClick(e)}
+        onClick={onSubmit}
         className="btn btn-xs sm:btn-sm md:btn-sm lg:btn-sm text-white"
       >
         Submit

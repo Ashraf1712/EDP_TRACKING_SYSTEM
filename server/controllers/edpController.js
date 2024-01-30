@@ -41,9 +41,20 @@ const updateEDPData = async(req, res) => {
     }
 }
 
+const deleteEDPData = async(req, res) => {
+    const { edpID } = req.params;
+    try {
+        const edpData = await EDP.deleteEDPByID({ edpID })
+        res.status(200).json(edpData)
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+}
+
 module.exports = {
     createEDPData,
     getEDPDataByEmail,
     getEDPDataByID,
-    updateEDPData
+    updateEDPData,
+    deleteEDPData
 }

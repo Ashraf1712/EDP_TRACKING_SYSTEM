@@ -227,6 +227,38 @@ edpSchema.statics.updateEDPByID = async function(updatedData) {
     }
 };
 
+edpSchema.statics.deleteEDPByID = async function({ edpID }) {
+    // Validation
+    if (!edpID) {
+        throw new Error('Something wrong with the data');
+    }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const deleteEDPResult = await this.findOneAndDelete({ EDP_ID: edpID });
+        const deleteGoalsResult = await Goals.findOneAndDelete({ EDP_ID: edpID });
+        const deletePlanResult = await Plan.findOneAndDelete({ EDP_ID: edpID });
+        const deleteStatusResult = await Status.findOneAndDelete({ EDP_ID: edpID });
+
+        if (deleteEDPResult && deleteGoalsResult && deletePlanResult && deleteStatusResult) {
+            console.log('All documents deleted successfully');
+            await session.commitTransaction();
+            session.endSession();
+            return "Done Delete";
+        } else {
+            console.log('Some documents not found');
+            throw new Error('Some documents not found');
+        }
+    } catch (error) {
+        console.error('Error Delete documents:', error);
+        await session.abortTransaction();
+        session.endSession();
+        throw error;
+    }
+}
+
 
 
 

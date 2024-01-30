@@ -69,4 +69,24 @@ const getEDPDataByID = async (edpID) => {
     }
 };
 
-export { createEDPData, getEDPData, getEDPDataByID };
+const deleteEDPData = async (edpID) => {
+    try {
+        const response = await fetch(`/api/edp/deleteEDPByID/${edpID}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!response.ok) {
+            const json = await response.json();
+            console.error(json.error);
+            return false; // Make sure to handle error cases
+        } else {
+            return true;
+        }
+    } catch (error) {
+        console.error("Error deleting EDP data:", error);
+    }
+}
+
+export { createEDPData, getEDPData, getEDPDataByID, deleteEDPData };
