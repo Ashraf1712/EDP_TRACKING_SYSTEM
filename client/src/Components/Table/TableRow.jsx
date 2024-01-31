@@ -1,9 +1,7 @@
+// TableRow.jsx
 import React from "react";
 
 function getCategoryColor(category) {
-  // You can define your own logic to assign colors based on the category
-  // For simplicity, let's alternate between two colors for COMPETENCY_CLUSTER
-  // and use a different set of colors for INTERVENTION
   const colorMap = {
     Leadership: 'bg-blue-500',
     Functional: 'bg-green-500',
@@ -20,11 +18,55 @@ function getCategoryColor(category) {
 }
 
 function formatDate(date) {
-  return !date ? "" : new Date(date).toLocaleDateString("en-GB", {
+  return date ? new Date(date).toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-  });
+  }) : "";
+}
+
+function renderMultilineContent(content) {
+  return (
+    <div
+      style={{
+        display: "-webkit-box",
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+        WebkitLineClamp: 3, // Adjust this value based on the number of lines you want to display
+      }}
+    >
+      {content}
+    </div>
+  );
+}
+
+function renderContent(header, data) {
+  const content = header.isHtml ? (
+    <div dangerouslySetInnerHTML={{ __html: data[header.id] }} />
+  ) : (
+    <>
+      {data[header.id]}<br />
+    </>
+  );
+
+  return (
+    <div>
+      {header.isDate ? (
+        <span>{formatDate(data[header.id] || "")}</span>
+      ) : (
+        <>
+          {header.id === "competencyAddress" || header.id === "actionPlan"
+            ? renderMultilineContent(content)
+            : content}
+          {header.badge && (
+            <span className={`badge badge-ghost badge-sm text-white border-white ${getCategoryColor(data[header.badge])}`}>
+              {data[header.badge]}
+            </span>
+          )}
+        </>
+      )}
+    </div>
+  );
 }
 
 function TableRow({ headers, data, href }) {
@@ -37,26 +79,11 @@ function TableRow({ headers, data, href }) {
             } border-slate-200 stroke-slate-500 text-slate-500`}
         >
           <div>
-            <a href={href}>
-              {header.isDate ? (
-                <span>{formatDate(data[header.id] || "")}</span>
-              ) : (
-                <div>
-                  {header.isHtml ? (
-                    <div dangerouslySetInnerHTML={{ __html: data[header.id] }} />
-                  ) : (
-                    <>
-                      {data[header.id]}<br />
-                    </>
-                  )}
-                  {header.badge && (
-                    <span className={`badge badge-ghost badge-sm text-white border-white ${getCategoryColor(data[header.badge])}`}>
-                      {data[header.badge]}
-                    </span>
-                  )}
-                </div>
-              )}
-            </a>
+            {href ? (
+              <a href={href}>{renderContent(header, data)}</a>
+            ) : (
+              renderContent(header, data)
+            )}
           </div>
         </td>
       ))}

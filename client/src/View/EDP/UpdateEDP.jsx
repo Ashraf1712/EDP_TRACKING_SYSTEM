@@ -9,15 +9,12 @@ import Plan from "../../Model/Plan";
 import Status from "../../Model/Status";
 import { useEDPDataByID } from "../../hooks/useEDPDataByID";
 import { useParams } from "react-router-dom";
-import { deleteEDPData } from "../../Services/edpService";
-import { useNavigate } from "react-router-dom";
 
 export default function UpdateEDP() {
     let typeUser = "User";
     const { edpID } = useParams();
     const data = useEDPDataByID(edpID);
     const { user } = useAuthContext();
-    const navigate = useNavigate();
 
     const [longTermGoal, setLongTermGoal] = useState("");
     const [shortTermGoal, setShortTermGoal] = useState("");
@@ -73,19 +70,12 @@ export default function UpdateEDP() {
 
     };
 
-    const handleDelete = async () => {
 
-        const response = await deleteEDPData(edpID);
-        if (response) {
-            navigate('/')
-        }
-        console.log("deleting");
-    }
 
 
     return (
         <div className="pt-24">
-            <SubmitHeader onSubmit={handleSubmit} onDelete={handleDelete} />
+            <SubmitHeader onSubmit={handleSubmit} deleteEDPID={edpID} />
             <header className="bg-white shadow">
                 <div className="mx-auto px-2 py-4 sm:px-4 lg:px-6">
                     <h1 className="text-lg font-bold tracking-tight text-gray-900">
