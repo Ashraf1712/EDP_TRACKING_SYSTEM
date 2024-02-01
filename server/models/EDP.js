@@ -173,7 +173,7 @@ async function updateStatus(edpID, updatedData) {
 }
 
 
-edpSchema.statics.updateEDPByID = async function(updatedData) {
+edpSchema.statics.updateEDPByID = async function(edpID, updatedData) {
     // Validation
     if (!updatedData) {
         throw new Error('Something wrong with the data');
@@ -183,16 +183,16 @@ edpSchema.statics.updateEDPByID = async function(updatedData) {
     session.startTransaction();
 
     try {
-        const updatedEDPResult = await this.findOneAndUpdate({ EDP_ID: updatedData.edpID }, {
+        const updatedEDPResult = await this.findOneAndUpdate({ EDP_ID: edpID }, {
             $set: {
                 updated_by: updatedData.staffEmail,
                 updated_at: Date.now(),
             }
         }, { new: true });
 
-        const updateGoalsResult = await updateGoals(updatedData.edpID, updatedData);
-        const updatePlanResult = await updatePlan(updatedData.edpID, updatedData);
-        const updateStatusResult = await updateStatus(updatedData.edpID, updatedData);
+        const updateGoalsResult = await updateGoals(edpID, updatedData);
+        const updatePlanResult = await updatePlan(edpID, updatedData);
+        const updateStatusResult = await updateStatus(edpID, updatedData);
 
         const allResults = {
             edpID: updatedEDPResult.EDP_ID,

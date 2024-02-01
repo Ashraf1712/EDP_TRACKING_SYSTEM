@@ -22,6 +22,32 @@ const createEDPData = async (staffEmail) => {
         console.error("Error creating edp data:", error);
     }
 };
+const updateEDPData = async (edpID, edpData) => {
+    try {
+
+        const response = await fetch(`/api/edp/updateEDP/${edpID}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(edpData),
+        });
+        if (!response.ok) {
+            // Handle non-successful response here
+            throw new Error(`Error updating EDP data: ${response.status} - ${response.statusText}`);
+        } else {
+            // Only parse JSON once
+            console.log("LESGO! EDP UPDATED");
+            const updatedData = await response.json();
+            console.log(updatedData);
+            return true; // Assuming your server returns the updated data
+        }
+    } catch (error) {
+        console.error("Error updating EDP data:", error);
+        throw error;
+    }
+};
+
 
 const getEDPData = async (staffEmail) => {
     try {
@@ -89,4 +115,4 @@ const deleteEDPData = async (edpID) => {
     }
 }
 
-export { createEDPData, getEDPData, getEDPDataByID, deleteEDPData };
+export { createEDPData, updateEDPData, getEDPData, getEDPDataByID, deleteEDPData };

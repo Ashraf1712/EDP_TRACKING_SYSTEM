@@ -32,9 +32,10 @@ const getEDPDataByID = async(req, res) => {
 }
 
 const updateEDPData = async(req, res) => {
-    const { edp } = req.body;
+    const edp = req.body;
+    const { edpID } = req.params;
     try {
-        const edpData = await EDP.updateEDPByID(edp)
+        const edpData = await EDP.updateEDPByID(edpID, edp)
         res.status(200).json(edpData)
     } catch (error) {
         res.status(400).json({ error: error.message })

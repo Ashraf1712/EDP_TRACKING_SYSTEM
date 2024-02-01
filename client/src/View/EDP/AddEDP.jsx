@@ -132,7 +132,7 @@ export default function AddEDP() {
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <p className="text-m font-medium ">Due Date</p>
               </div>
-              <DatepickerReact onDateChange={setDueDate} />
+              <DatepickerReact onDateChange={setDueDate} dateValue={null} defaultValue={null} />
               <div>Due Date: {dueDate}</div>
             </div>
 

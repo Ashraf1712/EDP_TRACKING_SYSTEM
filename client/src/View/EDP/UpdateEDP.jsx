@@ -9,6 +9,8 @@ import Plan from "../../Model/Plan";
 import Status from "../../Model/Status";
 import { useEDPDataByID } from "../../hooks/useEDPDataByID";
 import { useParams } from "react-router-dom";
+import EDP from "../../Model/EDP";
+import { updateEDPData } from "../../Services/edpService";
 
 export default function UpdateEDP() {
     let typeUser = "User";
@@ -16,6 +18,7 @@ export default function UpdateEDP() {
     const data = useEDPDataByID(edpID);
     const { user } = useAuthContext();
 
+    const [shouldRefetch, setShouldRefetch] = useState(true);
     const [longTermGoal, setLongTermGoal] = useState("");
     const [shortTermGoal, setShortTermGoal] = useState("");
     const [competencyCluster, setCompetencyCluster] = useState("");
@@ -29,46 +32,57 @@ export default function UpdateEDP() {
     const [remarks, setRemarks] = useState("");
 
     useEffect(() => {
-        if (data) {
+        if (shouldRefetch && data) {
             // Update state based on data
-            setLongTermGoal(data.goalsLongterm || "");
-            setShortTermGoal(data.goalsShortterm || "");
-            setCompetencyCluster(data.competencyCluster || "");
-            setIntervention(data.intervention || "");
-            setCompetencyAddress(data.competencyAddress || "");
-            setActionPlan(data.actionPlan || "");
+            setLongTermGoal(data.goalsLongterm || '');
+            setShortTermGoal(data.goalsShortterm || '');
+            setCompetencyCluster(data.competencyCluster || '');
+            setIntervention(data.intervention || '');
+            setCompetencyAddress(data.competencyAddress || '');
+            setActionPlan(data.actionPlan || '');
             setDueDate(data.dueDate || null);
             setDateAgreement(data.dateAgreement || null);
             setDateReview(data.dateReview || null);
-            setStatus(data.status || "");
-            setRemarks(data.remarks || "");
+            setStatus(data.status || '');
+            setRemarks(data.remarks || '');
+
+            // Reset the flag
+            setShouldRefetch(false);
         }
-    }, [data]);
+    }, [shouldRefetch, data]);
 
 
     const handleSubmit = async () => {
-        let goalsData = new Goals(
-            null,
-            longTermGoal,
-            shortTermGoal,
-        );
-        let planData = new Plan(
-            null,
-            competencyAddress,
-            competencyCluster,
-            actionPlan,
-            intervention,
-            remarks
-        );
-        let statusData = new Status(
-            null,
-            status,
-            dueDate,
-            dateAgreement,
-            dateReview,
-        );
+        try {
+            // Create the dataToSend object with the desired structure
+            const dataToSend = {
+                actionPlan: actionPlan,
+                competencyAddress: competencyAddress,
+                competencyCluster: competencyCluster,
+                dateAgreement: dateAgreement,
+                dateReview: dateReview,
+                dueDate: dueDate,
+                goalLongterm: longTermGoal,
+                goalShortterm: shortTermGoal,
+                edpID: edpID,
+                intervention: intervention,
+                remarks: remarks,
+                status: status,
+                staffEmail: user.Staff_Email,
+            };
 
+            // Assuming updateEDPData is your update function
+            const response = await updateEDPData(edpID, dataToSend);
+            if (response === true) {
+                window.location.reload();
+                setShouldRefetch(true);
+
+            }
+        } catch (error) {
+            console.error("Error updating EDP:", error);
+        }
     };
+
 
 
 
@@ -156,7 +170,8 @@ export default function UpdateEDP() {
                             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                 <p className="text-m font-medium ">Due Date</p>
                             </div>
-                            <DatepickerReact onDateChange={setDueDate} dateValue={dueDate} />
+                            {/* <DatepickerReact onDateChange={setDueDate} dateValue={dueDate} /> */}
+                            <DatepickerReact onDateChange={setDueDate} dateValue={dueDate} defaultValue={dueDate} />
                             <div>Due Date: {dueDate}</div>
                         </div>
 

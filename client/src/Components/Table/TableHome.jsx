@@ -3,12 +3,14 @@ import TableHeader from "./TableHeader";
 import TableRow from "./TableRow";
 import FilterReferenceNo from "../Filter/FilterReferenceNo";
 import FilterDueDate from "../Filter/FilterDueDate";
+import FilterStatus from "../Filter/FilterStatus";
 
 function TableHome({ headers, rows, dueDatesInYear }) {
   const [sortedColumn, setSortedColumn] = useState(null);
   const [sortingOrder, setSortingOrder] = useState("asc");
   const [selectedYear, setSelectedYear] = useState('');
   const [referenceNoFilter, setReferenceNoFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
 
   const handleSort = (column, order) => {
     setSortedColumn(column);
@@ -23,13 +25,21 @@ function TableHome({ headers, rows, dueDatesInYear }) {
     setReferenceNoFilter(text);
   };
 
+  const handleStatusFilterChange = (status) => {
+    setStatusFilter(status);
+  };
+
   const filteredRows = rows.filter((rowData) => {
     const year = new Date(rowData.dueDate).getFullYear().toString();
     const referenceNo = rowData.edpID.toLowerCase();
     const filterText = referenceNoFilter.toLowerCase();
+    const status = rowData.status;
 
-    return (selectedYear === "" || year === selectedYear) &&
-      (referenceNo.includes(filterText));
+    return (
+      (selectedYear === "" || year === selectedYear) &&
+      (referenceNo.includes(filterText)) &&
+      (statusFilter === "" || status === statusFilter)
+    );
   });
 
   const sortedRows = [...filteredRows].sort((a, b) => {
@@ -55,6 +65,7 @@ function TableHome({ headers, rows, dueDatesInYear }) {
     <div>
       <FilterDueDate dueDates={dueDatesInYear} onYearChange={handleYearChange} />
       <FilterReferenceNo onFilterChange={handleReferenceNoFilterChange} />
+      <FilterStatus onStatusChange={handleStatusFilterChange} /> {/* Add FilterStatus component here */}
 
       <table
         className="w-full text-left border border-separate rounded border-slate-200"

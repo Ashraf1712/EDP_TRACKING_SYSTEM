@@ -14,7 +14,7 @@ const {
 router.post('/createEDP', createEDPData)
 router.get('/getEDPByEmail/:staffEmail', getEDPDataByEmail)
 router.get('/getEDPByID/:edpID', getEDPDataByID)
-router.put('/updateEDP', updateEDPData)
+router.put('/updateEDP/:edpID', updateEDPData)
 router.delete('/deleteEDPByID/:edpID', deleteEDPData)
 
 module.exports = router;
