@@ -4,6 +4,10 @@ import TableRow from "./TableRow";
 import FilterReferenceNo from "../Filter/FilterReferenceNo";
 import FilterDueDate from "../Filter/FilterDueDate";
 import FilterStatus from "../Filter/FilterStatus";
+import FilterCompetencyCluster from "../Filter/FilterCompetencyCluster";
+import FilterIntervention from "../Filter/FilterIntervention"; // Updated import for FilterIntervention
+import FilterCompetencyAddress from "../Filter/FilterCompetencyAddress";
+import FilterActionPlan from "../Filter/FilterActionPlan";
 
 function TableHome({ headers, rows, dueDatesInYear }) {
   const [sortedColumn, setSortedColumn] = useState(null);
@@ -11,6 +15,10 @@ function TableHome({ headers, rows, dueDatesInYear }) {
   const [selectedYear, setSelectedYear] = useState('');
   const [referenceNoFilter, setReferenceNoFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [competencyClusterFilter, setCompetencyClusterFilter] = useState([]);
+  const [interventionFilter, setInterventionFilter] = useState([]); // Updated state name to interventionFilter
+  const [competencyAddressFilter, setCompetencyAddressFilter] = useState(''); // New state for competency address filter
+  const [actionPlanFilter, setActionPlanFilter] = useState('');
 
   const handleSort = (column, order) => {
     setSortedColumn(column);
@@ -29,16 +37,40 @@ function TableHome({ headers, rows, dueDatesInYear }) {
     setStatusFilter(status);
   };
 
+  const handleCompetencyClusterFilterChange = (competencyClusters) => {
+    setCompetencyClusterFilter(competencyClusters);
+  };
+
+  const handleInterventionFilterChange = (interventions) => {
+    setInterventionFilter(interventions);
+  };
+
+  const handleCompetencyAddressFilterChange = (text) => {
+    setCompetencyAddressFilter(text);
+  };
+
+  const handleActionPlanFilterChange = (text) => {
+    setActionPlanFilter(text);
+  };
+
   const filteredRows = rows.filter((rowData) => {
     const year = new Date(rowData.dueDate).getFullYear().toString();
     const referenceNo = rowData.edpID.toLowerCase();
     const filterText = referenceNoFilter.toLowerCase();
     const status = rowData.status;
+    const competencyCluster = rowData.competencyCluster || '';
+    const intervention = rowData.intervention || ''; // Updated property name to intervention
+    const competencyAddress = rowData.competencyAddress || '';
+    const actionPlan = rowData.actionPlan || '';
 
     return (
       (selectedYear === "" || year === selectedYear) &&
       (referenceNo.includes(filterText)) &&
-      (statusFilter === "" || status === statusFilter)
+      (statusFilter === "" || status === statusFilter) &&
+      (competencyClusterFilter.length === 0 || competencyClusterFilter.includes(competencyCluster)) &&
+      (interventionFilter.length === 0 || interventionFilter.includes(intervention)) &&// Updated property name to intervention
+      (competencyAddressFilter === '' || competencyAddress.toLowerCase().includes(competencyAddressFilter.toLowerCase())) &&
+      (actionPlanFilter === '' || actionPlan.toLowerCase().includes(actionPlanFilter.toLowerCase()))
     );
   });
 
@@ -65,7 +97,11 @@ function TableHome({ headers, rows, dueDatesInYear }) {
     <div>
       <FilterDueDate dueDates={dueDatesInYear} onYearChange={handleYearChange} />
       <FilterReferenceNo onFilterChange={handleReferenceNoFilterChange} />
-      <FilterStatus onStatusChange={handleStatusFilterChange} /> {/* Add FilterStatus component here */}
+      <FilterStatus onStatusChange={handleStatusFilterChange} />
+      <FilterCompetencyCluster onCompetencyClusterChange={handleCompetencyClusterFilterChange} />
+      <FilterIntervention onInterventionChange={handleInterventionFilterChange} /> {/* Updated component name */}
+      <FilterCompetencyAddress onFilterCompetencyAddressChange={handleCompetencyAddressFilterChange} /> {/* New filter component */}
+      <FilterActionPlan onFilterActionPlanChange={handleActionPlanFilterChange} />
 
       <table
         className="w-full text-left border border-separate rounded border-slate-200"
