@@ -4,12 +4,8 @@ import DatepickerReact from "../../Components/DatepickerReact";
 import TextareaInput from "../../Components/TextareaInput";
 import SubmitHeader from "../../Components/SubmitHeader";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import Goals from "../../Model/Goals";
-import Plan from "../../Model/Plan";
-import Status from "../../Model/Status";
 import { useEDPDataByID } from "../../hooks/useEDPDataByID";
 import { useParams } from "react-router-dom";
-import EDP from "../../Model/EDP";
 import { updateEDPData } from "../../Services/edpService";
 
 export default function UpdateEDP() {
@@ -170,7 +166,6 @@ export default function UpdateEDP() {
                             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                 <p className="text-m font-medium ">Due Date</p>
                             </div>
-                            {/* <DatepickerReact onDateChange={setDueDate} dateValue={dueDate} /> */}
                             <DatepickerReact onDateChange={setDueDate} dateValue={dueDate} defaultValue={dueDate} />
                             <div>Due Date: {dueDate}</div>
                         </div>
@@ -185,7 +180,7 @@ export default function UpdateEDP() {
                                     labelText={"Select Status"}
                                     onChange={(e) => setStatus(e.target.value)}
                                     value={status}
-
+                                    typeUser={typeUser}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 />
                                 <div>Status : {status}</div>

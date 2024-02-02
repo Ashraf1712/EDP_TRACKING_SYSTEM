@@ -1,24 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TableHeader from "./TableHeader";
 import TableRow from "./TableRow";
 import FilterReferenceNo from "../Filter/FilterReferenceNo";
 import FilterDueDate from "../Filter/FilterDueDate";
 import FilterStatus from "../Filter/FilterStatus";
 import FilterCompetencyCluster from "../Filter/FilterCompetencyCluster";
-import FilterIntervention from "../Filter/FilterIntervention"; // Updated import for FilterIntervention
+import FilterIntervention from "../Filter/FilterIntervention";
 import FilterCompetencyAddress from "../Filter/FilterCompetencyAddress";
 import FilterActionPlan from "../Filter/FilterActionPlan";
+import Pagination from "../Pagination/Pagination"; // Assuming Pagination component is in the same directory
 
-function TableHome({ headers, rows, dueDatesInYear }) {
+function TableHome({ headers, rows, dueDatesInYear, resultsPerPage }) {
   const [sortedColumn, setSortedColumn] = useState(null);
   const [sortingOrder, setSortingOrder] = useState("asc");
   const [selectedYear, setSelectedYear] = useState('');
   const [referenceNoFilter, setReferenceNoFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [competencyClusterFilter, setCompetencyClusterFilter] = useState([]);
-  const [interventionFilter, setInterventionFilter] = useState([]); // Updated state name to interventionFilter
-  const [competencyAddressFilter, setCompetencyAddressFilter] = useState(''); // New state for competency address filter
+  const [interventionFilter, setInterventionFilter] = useState([]);
+  const [competencyAddressFilter, setCompetencyAddressFilter] = useState('');
   const [actionPlanFilter, setActionPlanFilter] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedYear, referenceNoFilter, statusFilter, competencyClusterFilter, interventionFilter, competencyAddressFilter, actionPlanFilter]);
 
   const handleSort = (column, order) => {
     setSortedColumn(column);
@@ -53,13 +59,19 @@ function TableHome({ headers, rows, dueDatesInYear }) {
     setActionPlanFilter(text);
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const startIndex = (currentPage - 1) * resultsPerPage;
+  const endIndex = startIndex + resultsPerPage;
   const filteredRows = rows.filter((rowData) => {
     const year = new Date(rowData.dueDate).getFullYear().toString();
     const referenceNo = rowData.edpID.toLowerCase();
     const filterText = referenceNoFilter.toLowerCase();
     const status = rowData.status;
     const competencyCluster = rowData.competencyCluster || '';
-    const intervention = rowData.intervention || ''; // Updated property name to intervention
+    const intervention = rowData.intervention || '';
     const competencyAddress = rowData.competencyAddress || '';
     const actionPlan = rowData.actionPlan || '';
 
@@ -68,11 +80,14 @@ function TableHome({ headers, rows, dueDatesInYear }) {
       (referenceNo.includes(filterText)) &&
       (statusFilter === "" || status === statusFilter) &&
       (competencyClusterFilter.length === 0 || competencyClusterFilter.includes(competencyCluster)) &&
-      (interventionFilter.length === 0 || interventionFilter.includes(intervention)) &&// Updated property name to intervention
+      (interventionFilter.length === 0 || interventionFilter.includes(intervention)) &&
       (competencyAddressFilter === '' || competencyAddress.toLowerCase().includes(competencyAddressFilter.toLowerCase())) &&
       (actionPlanFilter === '' || actionPlan.toLowerCase().includes(actionPlanFilter.toLowerCase()))
     );
   });
+
+  const filteredResults = filteredRows.length;
+
 
   const sortedRows = [...filteredRows].sort((a, b) => {
     const aValue = a[sortedColumn];
@@ -93,32 +108,33 @@ function TableHome({ headers, rows, dueDatesInYear }) {
     }
   });
 
+  const displayedRows = sortedRows.slice(startIndex, endIndex);
+
   return (
     <div>
       <FilterDueDate dueDates={dueDatesInYear} onYearChange={handleYearChange} />
       <FilterReferenceNo onFilterChange={handleReferenceNoFilterChange} />
       <FilterStatus onStatusChange={handleStatusFilterChange} />
       <FilterCompetencyCluster onCompetencyClusterChange={handleCompetencyClusterFilterChange} />
-      <FilterIntervention onInterventionChange={handleInterventionFilterChange} /> {/* Updated component name */}
-      <FilterCompetencyAddress onFilterCompetencyAddressChange={handleCompetencyAddressFilterChange} /> {/* New filter component */}
+      <FilterIntervention onInterventionChange={handleInterventionFilterChange} />
+      <FilterCompetencyAddress onFilterCompetencyAddressChange={handleCompetencyAddressFilterChange} />
       <FilterActionPlan onFilterActionPlanChange={handleActionPlanFilterChange} />
 
-      <table
-        className="w-full text-left border border-separate rounded border-slate-200"
-        cellSpacing="0"
-      >
+      <table className="w-full text-left border border-separate rounded border-slate-200" cellSpacing="0">
         <tbody>
           <TableHeader headers={headers} onSort={handleSort} />
-          {sortedRows.map((rowData, rowIndex) => (
-            <TableRow
-              key={rowIndex}
-              headers={headers}
-              data={rowData}
-              href={`/edpDetails/${rowData.edpID}`}
-            />
+          {displayedRows.map((rowData, rowIndex) => (
+            <TableRow key={rowIndex} headers={headers} data={rowData} href={`/edpDetails/${rowData.edpID}`} />
           ))}
         </tbody>
       </table>
+
+      <Pagination
+        totalResults={filteredResults}
+        resultsPerPage={resultsPerPage}
+        currentPage={currentPage}
+        onChange={handlePageChange}
+      />
     </div>
   );
 }
