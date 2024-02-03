@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
 
 //Routes Import
 const userRoutes = require('./routes/userRoutes.js');
@@ -49,6 +50,9 @@ app.use('/api/goals', goalsRoutes);
 app.use('/api/plan', planRoutes);
 app.use('/api/status', statusRoutes);
 app.use('/api/edp', edpRoutes);
+
+const absolutePath = path.join(process.cwd(), 'public', 'uploads');
+app.use('/uploads', express.static(absolutePath));
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 app.listen(port, () => {

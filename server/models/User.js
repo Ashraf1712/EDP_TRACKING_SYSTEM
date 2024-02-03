@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
+const Category = require('../models/Category');
+const Section = require('../models/Section');
 
 const userSchema = new mongoose.Schema({
     Staff_ID: {
@@ -46,6 +48,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: "User",
+    },
+    Staff_ProfilePicture: {
+        type: String,
+        required: true,
+        default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
     },
 
     created_at: {
@@ -118,7 +125,68 @@ userSchema.statics.login = async function(email, password) {
         throw new Error('Incorrect password');
     }
 
-    return user;
+    return user
+}
+
+userSchema.statics.updateProfile = async function(email, section, category, profilePicturePath) {
+    try {
+        if (!section || !category || !profilePicturePath) {
+            throw new Error('All fields must be filled');
+        }
+        const updatedUser = await this.findOneAndUpdate({ Staff_Email: email }, {
+            $set: {
+                Section_ID: section,
+                Category_ID: category,
+                Staff_ProfilePicture: profilePicturePath,
+                updated_at: Date.now()
+            }
+        });
+
+        if (!updatedUser) {
+            throw new Error('User not found or not updated');
+        }
+
+        const updatedUserData = await this.findOne({ Staff_Email: email });
+
+        return {
+            success: true,
+            message: 'User updated successfully',
+            user: updatedUserData,
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: error.message,
+        };
+    }
+}
+
+userSchema.statics.getAllCategory = async() => {
+    try {
+        // Use the find method to get all categories
+        const categories = await Category.find({});
+
+        // Return the array of categories
+        return categories;
+    } catch (error) {
+        // Handle any errors that occur during the query
+        console.error('Error fetching categories:', error);
+        throw error;
+    }
+}
+
+userSchema.statics.getAllSection = async() => {
+    try {
+        // Use the find method to get all categories
+        const section = await Section.find({});
+
+        // Return the array of categories
+        return section;
+    } catch (error) {
+        // Handle any errors that occur during the query
+        console.error('Error fetching section:', error);
+        throw error;
+    }
 }
 
 module.exports = mongoose.model('User', userSchema);

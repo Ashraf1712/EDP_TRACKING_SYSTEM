@@ -1,3 +1,4 @@
+
 export const COMPETENCY_CLUSTER = [
     'Leadership',
     'Functional',
@@ -23,3 +24,4 @@ export const MANAGER_STATUS = [
     'In Progress',
     'Completed'
 ]
+

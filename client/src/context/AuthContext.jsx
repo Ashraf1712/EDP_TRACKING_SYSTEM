@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import {createContext, useReducer, useEffect} from 'react'
+import { createContext, useReducer, useEffect } from 'react'
 
 export const AuthContext = createContext()
 
@@ -8,7 +8,7 @@ export const authReducer = (state, action) => {
         case 'LOGIN':
             return { user: { token: action.payload.token, ...action.payload.user } };
         case 'LOGOUT':
-            return {user: null}
+            return { user: null }
         default:
             return state
     }
@@ -16,7 +16,7 @@ export const authReducer = (state, action) => {
 
 export const AuthContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, {
-        user:null
+        user: null
     })
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'))
@@ -32,7 +32,7 @@ export const AuthContextProvider = ({ children }) => {
     console.log('AuthContext state:', state)
 
     return (
-        <AuthContext.Provider value={{...state, dispatch}}>
+        <AuthContext.Provider value={{ ...state, dispatch }}>
             {children}
         </AuthContext.Provider>
     )

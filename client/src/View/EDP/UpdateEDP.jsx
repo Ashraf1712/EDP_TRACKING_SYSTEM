@@ -29,7 +29,6 @@ export default function UpdateEDP() {
 
     useEffect(() => {
         if (shouldRefetch && data) {
-            // Update state based on data
             setLongTermGoal(data.goalsLongterm || '');
             setShortTermGoal(data.goalsShortterm || '');
             setCompetencyCluster(data.competencyCluster || '');
