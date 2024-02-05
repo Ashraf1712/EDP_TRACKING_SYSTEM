@@ -42,43 +42,39 @@ export default function Homepage() {
               // Handle other statuses if needed
               break;
           }
-          dueDates.push(item.dueDate)
+          dueDates.push(item.dueDate);
         });
         setDueDatesInYear(dueDates);
         setNotYetStartedCount(notStarted);
         setInProgressCount(inProgress);
         setCompletedCount(completed);
-        setOverallProgress((completed / (completed + inProgress + notStarted)) * 100);
+        setOverallProgress(
+          (completed / (completed + inProgress + notStarted)) * 100
+        );
       }
     };
 
     updateCounts();
   }, [data]);
 
-
-
   const headers = [
     { id: "edpID", header: "Reference No." },
-    { id: "competencyAddress", header: "Competency to Address", badge: "competencyCluster", isHtml: true },
-    { id: "actionPlan", header: "Action Plan", badge: "intervention", isHtml: true },
+    {
+      id: "competencyAddress",
+      header: "Competency to Address",
+      badge: "competencyCluster",
+      isHtml: true,
+    },
+    {
+      id: "actionPlan",
+      header: "Action Plan",
+      badge: "intervention",
+      isHtml: true,
+    },
     { id: "dueDate", header: "Due Date", isDate: true },
     { id: "status", header: "Status" },
     { id: "dateReview", header: "Date Review", isDate: true },
   ];
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    // Perform any additional actions when the page changes
-  };
-
-  // Calculate total results dynamically based on applied filters
-  const totalResults = data
-    ? data.filter((rowData) => {
-      // Apply your filtering logic here
-      return true; // Include or exclude rowData based on your criteria
-    }).length
-    : 0;
-
 
   return (
     <div>
@@ -91,19 +87,38 @@ export default function Homepage() {
       </header>
       <main>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ml-5 mt-5 mr-5">
-          <CountCardDisplay icon={notYetStartedIcon} header="Not Yet Started" count={notYetStartedCount} />
-          <CountCardDisplay icon={inProgressIcon} header="In Progress" count={inProgressCount} />
-          <CountCardDisplay icon={completedIcon} header="Completed" count={completedCount} />
-          <CountCardDisplay icon={completedIcon} header="Progression" count={overallProgress} isPercentage={true} />
+          <CountCardDisplay
+            icon={notYetStartedIcon}
+            header="Not Yet Started"
+            count={notYetStartedCount}
+          />
+          <CountCardDisplay
+            icon={inProgressIcon}
+            header="In Progress"
+            count={inProgressCount}
+          />
+          <CountCardDisplay
+            icon={completedIcon}
+            header="Completed"
+            count={completedCount}
+          />
+          <CountCardDisplay
+            icon={completedIcon}
+            header="Progression"
+            count={overallProgress}
+            isPercentage={true}
+          />
         </div>
 
         {/* FILTER SECTION */}
-        {/* <div className="w-full overflow-x-auto p-5">
-          <FilterDueDate dueDates={dueDatesInYear} />
-        </div> */}
         <div className="w-full overflow-x-auto p-5">
-          <TableHome headers={headers} rows={data ? data : []} dueDatesInYear={dueDatesInYear} currentPage={currentPage} resultsPerPage={resultsPerPage} />
-          {/* <Pagination totalResults={totalResults} resultsPerPage={resultsPerPage} currentPage={currentPage} onChange={handlePageChange} /> */}
+          <TableHome
+            headers={headers}
+            rows={data ? data : []}
+            dueDatesInYear={dueDatesInYear}
+            currentPage={currentPage}
+            resultsPerPage={resultsPerPage}
+          />
         </div>
       </main>
     </div>

@@ -25,8 +25,8 @@ function NavigationBar() {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <img
-                  className="h-8 w-8"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                  className="h-12 w-12"
+                  src="src/assets/icons/EDP.svg"
                   alt="Your Company"
                 ></img>
               </div>
@@ -34,10 +34,11 @@ function NavigationBar() {
                 <div className="ml-10 flex items-baseline space-x-4">
                   <a
                     href="/"
-                    className={`${window.location.pathname === "/"
-                      ? "bg-gray-900 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                      } rounded-md px-3 py-2 text-sm font-medium`}
+                    className={`${
+                      window.location.pathname === "/"
+                        ? "bg-gray-900 text-white"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    } rounded-md px-3 py-2 text-sm font-medium`}
                   >
                     Homepage
                   </a>
@@ -49,10 +50,11 @@ function NavigationBar() {
                   </a>
                   <a
                     href="/edp-add"
-                    className={`${window.location.pathname === "/edp-add"
-                      ? "bg-gray-900 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                      } rounded-md px-3 py-2 text-sm font-medium`}
+                    className={`${
+                      window.location.pathname === "/edp-add"
+                        ? "bg-gray-900 text-white"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    } rounded-md px-3 py-2 text-sm font-medium`}
                   >
                     Add EDP
                   </a>
@@ -125,15 +127,6 @@ function NavigationBar() {
                         id="user-menu-item-0"
                       >
                         Your Profile
-                      </a>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
-                        role="menuitem"
-                        tabIndex="-1"
-                        id="user-menu-item-1"
-                      >
-                        Settings
                       </a>
                       <a
                         href="#"
@@ -253,16 +246,10 @@ function NavigationBar() {
             </div>
             <div className="mt-3 space-y-1 px-2">
               <a
-                href="#"
+                href="/profile"
                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
               >
                 Your Profile
-              </a>
-              <a
-                href="#"
-                className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-              >
-                Settings
               </a>
               <a
                 onClick={handleLogout}

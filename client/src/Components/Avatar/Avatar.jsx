@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
 export default function Avatar({ src }) {
-    return (
+  console.log(src);
 
-        <div className="avatar">
-            <div className="w-24 rounded-full">
-                <img src={src} alt="Avatar 2" />
-            </div>
-        </div>
-
-    );
+  return (
+    <div className="avatar">
+      <div className="w-24 rounded-full">
+        <img src={src} alt="Avatar 2" />
+      </div>
+    </div>
+  );
 }
