@@ -32,12 +32,12 @@ const getEDPDataByID = async(req, res) => {
 }
 
 const updateEDPData = async(req, res) => {
-    const edp = req.body;
+    const { edp } = req.body;
     const { edpID } = req.params;
+    console.log(edp);
     try {
         const edpData = await EDP.updateEDPDetails(edpID, edp)
         if(edpData){
-            // If the update is successful, retrieve the updated data
             const updatedEDPData = await EDP.getEDPByID({ edpID });
             res.status(200).json(updatedEDPData);
         }else{
