@@ -8,7 +8,7 @@ import inProgressIcon from "../assets/icons/inProgress.svg";
 import completedIcon from "../assets/icons/completed.svg";
 import Pagination from "../Components/Pagination/Pagination";
 
-export default function Homepage() {
+function Homepage() {
   const { user } = useAuthContext();
   const data = useEDPData(user.Staff_Email);
   const [notYetStartedCount, setNotYetStartedCount] = useState(0);
@@ -77,50 +77,55 @@ export default function Homepage() {
   ];
 
   return (
-    <div>
-      <header className="bg-white shadow">
-        <div className="mx-auto px-2 py-4 sm:px-4 lg:px-6">
-          <h1 className="text-lg font-bold tracking-tight text-gray-900">
-            Homepage
-          </h1>
-        </div>
-      </header>
-      <main>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ml-5 mt-5 mr-5">
-          <CountCardDisplay
-            icon={notYetStartedIcon}
-            header="Not Yet Started"
-            count={notYetStartedCount}
-          />
-          <CountCardDisplay
-            icon={inProgressIcon}
-            header="In Progress"
-            count={inProgressCount}
-          />
-          <CountCardDisplay
-            icon={completedIcon}
-            header="Completed"
-            count={completedCount}
-          />
-          <CountCardDisplay
-            icon={completedIcon}
-            header="Progression"
-            count={overallProgress}
-            isPercentage={true}
-          />
-        </div>
-
-        {/* FILTER SECTION */}
-        <div className="w-full overflow-x-auto p-5">
-          <TableHome
-            headers={headers}
-            rows={data ? data : []}
-            dueDatesInYear={dueDatesInYear}
-            currentPage={currentPage}
-            resultsPerPage={resultsPerPage}
-          />
-        </div>
-      </main>
+    <div className="flex">
+      {/* Navigation Bar */}
+      {/* Main Content */}
+      <div className="flex-1 ml-48">
+        <header className="bg-white shadow">
+          <div className="mx-auto px-2 py-4 sm:px-4 lg:px-6">
+            <h1 className="text-lg font-bold tracking-tight text-gray-900">
+              Homepage
+            </h1>
+          </div>
+        </header>
+        <main>
+          <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-3 gap-2 md:gap-4 lg:gap-6 ml-auto mr-auto mt-5 justify-center items-center">
+            <CountCardDisplay
+              icon={notYetStartedIcon}
+              header="Not Yet Started"
+              count={notYetStartedCount}
+            />
+            <CountCardDisplay
+              icon={inProgressIcon}
+              header="In Progress"
+              count={inProgressCount}
+            />
+            <CountCardDisplay
+              icon={completedIcon}
+              header="Completed"
+              count={completedCount}
+            />
+            <CountCardDisplay
+              icon={completedIcon}
+              header="Progression"
+              count={overallProgress}
+              isPercentage={true}
+            />
+          </div>
+          {/* FILTER SECTION */}
+          <div className="w-full overflow-x-auto p-5">
+            <TableHome
+              headers={headers}
+              rows={data ? data : []}
+              dueDatesInYear={dueDatesInYear}
+              currentPage={currentPage}
+              resultsPerPage={resultsPerPage}
+            />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
+
+export default Homepage;

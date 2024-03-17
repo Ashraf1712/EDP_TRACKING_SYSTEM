@@ -13,18 +13,26 @@ import Pagination from "../Pagination/Pagination"; // Assuming Pagination compon
 function TableHome({ headers, rows, dueDatesInYear, resultsPerPage }) {
   const [sortedColumn, setSortedColumn] = useState(null);
   const [sortingOrder, setSortingOrder] = useState("asc");
-  const [selectedYear, setSelectedYear] = useState('');
-  const [referenceNoFilter, setReferenceNoFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [selectedYear, setSelectedYear] = useState("");
+  const [referenceNoFilter, setReferenceNoFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const [competencyClusterFilter, setCompetencyClusterFilter] = useState([]);
   const [interventionFilter, setInterventionFilter] = useState([]);
-  const [competencyAddressFilter, setCompetencyAddressFilter] = useState('');
-  const [actionPlanFilter, setActionPlanFilter] = useState('');
+  const [competencyAddressFilter, setCompetencyAddressFilter] = useState("");
+  const [actionPlanFilter, setActionPlanFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedYear, referenceNoFilter, statusFilter, competencyClusterFilter, interventionFilter, competencyAddressFilter, actionPlanFilter]);
+  }, [
+    selectedYear,
+    referenceNoFilter,
+    statusFilter,
+    competencyClusterFilter,
+    interventionFilter,
+    competencyAddressFilter,
+    actionPlanFilter,
+  ]);
 
   const handleSort = (column, order) => {
     setSortedColumn(column);
@@ -70,24 +78,29 @@ function TableHome({ headers, rows, dueDatesInYear, resultsPerPage }) {
     const referenceNo = rowData.edpID.toLowerCase();
     const filterText = referenceNoFilter.toLowerCase();
     const status = rowData.status;
-    const competencyCluster = rowData.competencyCluster || '';
-    const intervention = rowData.intervention || '';
-    const competencyAddress = rowData.competencyAddress || '';
-    const actionPlan = rowData.actionPlan || '';
+    const competencyCluster = rowData.competencyCluster || "";
+    const intervention = rowData.intervention || "";
+    const competencyAddress = rowData.competencyAddress || "";
+    const actionPlan = rowData.actionPlan || "";
 
     return (
       (selectedYear === "" || year === selectedYear) &&
-      (referenceNo.includes(filterText)) &&
+      referenceNo.includes(filterText) &&
       (statusFilter === "" || status === statusFilter) &&
-      (competencyClusterFilter.length === 0 || competencyClusterFilter.includes(competencyCluster)) &&
-      (interventionFilter.length === 0 || interventionFilter.includes(intervention)) &&
-      (competencyAddressFilter === '' || competencyAddress.toLowerCase().includes(competencyAddressFilter.toLowerCase())) &&
-      (actionPlanFilter === '' || actionPlan.toLowerCase().includes(actionPlanFilter.toLowerCase()))
+      (competencyClusterFilter.length === 0 ||
+        competencyClusterFilter.includes(competencyCluster)) &&
+      (interventionFilter.length === 0 ||
+        interventionFilter.includes(intervention)) &&
+      (competencyAddressFilter === "" ||
+        competencyAddress
+          .toLowerCase()
+          .includes(competencyAddressFilter.toLowerCase())) &&
+      (actionPlanFilter === "" ||
+        actionPlan.toLowerCase().includes(actionPlanFilter.toLowerCase()))
     );
   });
 
   const filteredResults = filteredRows.length;
-
 
   const sortedRows = [...filteredRows].sort((a, b) => {
     const aValue = a[sortedColumn];
@@ -112,19 +125,69 @@ function TableHome({ headers, rows, dueDatesInYear, resultsPerPage }) {
 
   return (
     <div>
-      <FilterDueDate dueDates={dueDatesInYear} onYearChange={handleYearChange} />
-      <FilterReferenceNo onFilterChange={handleReferenceNoFilterChange} />
-      <FilterStatus onStatusChange={handleStatusFilterChange} />
-      <FilterCompetencyCluster onCompetencyClusterChange={handleCompetencyClusterFilterChange} />
-      <FilterIntervention onInterventionChange={handleInterventionFilterChange} />
-      <FilterCompetencyAddress onFilterCompetencyAddressChange={handleCompetencyAddressFilterChange} />
-      <FilterActionPlan onFilterActionPlanChange={handleActionPlanFilterChange} />
+      <FilterCompetencyCluster
+        onCompetencyClusterChange={handleCompetencyClusterFilterChange}
+      />
+      <FilterIntervention
+        onInterventionChange={handleInterventionFilterChange}
+      />
 
-      <table className="w-full text-left border border-separate rounded border-slate-200" cellSpacing="0">
+      <table
+        className="w-full text-left border border-separate rounded border-slate-200"
+        cellSpacing="0"
+      >
         <tbody>
-          <TableHeader headers={headers} onSort={handleSort} />
+          <TableHeader
+            headers={headers}
+            onSort={handleSort}
+            filterComponents={{
+              edpID: (
+                <FilterReferenceNo
+                  onFilterChange={handleReferenceNoFilterChange}
+                />
+              ),
+              dueDate: (
+                <FilterDueDate
+                  dueDates={dueDatesInYear}
+                  onYearChange={handleYearChange}
+                />
+              ),
+              status: (
+                <FilterStatus onStatusChange={handleStatusFilterChange} />
+              ),
+              competencyCluster: (
+                <FilterCompetencyCluster
+                  onCompetencyClusterChange={
+                    handleCompetencyClusterFilterChange
+                  }
+                />
+              ),
+              intervention: (
+                <FilterIntervention
+                  onInterventionChange={handleInterventionFilterChange}
+                />
+              ),
+              competencyAddress: (
+                <FilterCompetencyAddress
+                  onFilterCompetencyAddressChange={
+                    handleCompetencyAddressFilterChange
+                  }
+                />
+              ),
+              actionPlan: (
+                <FilterActionPlan
+                  onFilterActionPlanChange={handleActionPlanFilterChange}
+                />
+              ),
+            }}
+          />
           {displayedRows.map((rowData, rowIndex) => (
-            <TableRow key={rowIndex} headers={headers} data={rowData} href={`/edpDetails/${rowData.edpID}`} />
+            <TableRow
+              key={rowIndex}
+              headers={headers}
+              data={rowData}
+              href={`/edpDetails/${rowData.edpID}`}
+            />
           ))}
         </tbody>
       </table>
