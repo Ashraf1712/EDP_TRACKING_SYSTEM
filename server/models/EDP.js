@@ -1,266 +1,205 @@
-const mongoose = require('mongoose');
 const { generateUniqueID } = require('../utils/utils');
-const Goals = require('./Goals');
-const Plan = require('./Plan');
-const Status = require('./Status');
+const db = require('../config/db');
 
-const edpSchema = new mongoose.Schema({
-    EDP_ID: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    created_at: {
-        type: Date,
-        default: Date.now,
-    },
-    created_by: {
-        type: String,
-        required: true,
-    },
-    updated_at: {
-        type: Date,
-        default: Date.now,
-    },
-    updated_by: {
-        type: String,
-        required: true,
-    }
-
-}, { collection: 'EDP' });
-
-
-//Static create goals
-edpSchema.statics.createEDP = async function({ staffEmail }) {
-    //Validation
-    if (!staffEmail) {
-        throw new Error('Something wrong with the data');
-    }
-
-    const uniqueEDPID = await generateUniqueID(this, 'EDP_ID');
-
-    const edpData = await this.create({
-        EDP_ID: uniqueEDPID,
-        created_by: staffEmail,
-        updated_by: staffEmail,
-    })
-
-    return edpData;
-}
-
-// //static get goals 
-edpSchema.statics.getEDPByEmail = async function({ staffEmail }) {
-    try {
-        // Get EDP data by staff email
-        const edpData = await this.find({ created_by: staffEmail }).exec();
-
-        // Extract EDP IDs from the fetched EDP data
-        const edpIDs = edpData.map(edpData => edpData.EDP_ID);
-
-        // Fetch related Goals, Plan, and Status data using a single Promise.all
-        const relatedData = await Promise.all(edpIDs.map(async(EDP_ID) => {
-            const goalsData = await Goals.findOne({ EDP_ID }).select(['Goals_Longterm', 'Goals_Shortterm']).exec();
-            const planData = await Plan.findOne({ EDP_ID }).select(['Competency_Address', 'Competency_Cluster', 'Action_Plan', 'Intervention', 'Remarks']).exec();
-            const statusData = await Status.findOne({ EDP_ID }).select(['Status', 'Due_Date', 'Date_Agreement', 'Date_Review']).exec();
-
-            return {
-                goalsData,
-                planData,
-                statusData
-            };
-        }));
-
-        // Format the data as needed
-        const formattedGoals = edpData.map((edpData, index) => {
-            const { goalsData, planData, statusData } = relatedData[index];
-
-            return {
-                edpID: edpData.EDP_ID,
-                updated_by: edpData.updated_by,
-                goalsLongterm: goalsData ? goalsData.Goals_Longterm : null,
-                goalsShortterm: goalsData ? goalsData.Goals_Shortterm : null,
-                competencyAddress: planData ? planData.Competency_Address : null,
-                competencyCluster: planData ? planData.Competency_Cluster : null,
-                actionPlan: planData ? planData.Action_Plan : null,
-                intervention: planData ? planData.Intervention : null,
-                remarks: planData ? planData.Remarks : null,
-                status: statusData ? statusData.Status : null,
-                dueDate: statusData ? statusData.Due_Date : null,
-                dateAgreement: statusData ? statusData.Date_Agreement : null,
-                dateReview: statusData ? statusData.Date_Review : null,
-            };
-        });
-
-        return formattedGoals;
-
-    } catch (error) {
-        console.error('Error fetching goals data:', error);
-        throw new Error('Internal Server Error');
-    }
-}
-
-// //static get goals 
-edpSchema.statics.getEDPByID = async function({ edpID }) {
-    try {
-        // Get EDP data by EDP_ID
-        const edpData = await this.findOne({ EDP_ID: edpID }).exec();
-
-        if (!edpData) {
-            throw new Error('EDP document not found');
+class EDP{
+    static async createEDP({ staffEmail }) {
+        //Validation
+        if(!staffEmail){
+            throw new Error('Something wrong with the data');
         }
-
-        // Fetch related Goals, Plan, and Status data
-        const goalsData = await Goals.findOne({ EDP_ID: edpData.EDP_ID }).select(['Goals_Longterm', 'Goals_Shortterm']).exec();
-        const planData = await Plan.findOne({ EDP_ID: edpData.EDP_ID }).select(['Competency_Address', 'Competency_Cluster', 'Action_Plan', 'Intervention', 'Remarks']).exec();
-        const statusData = await Status.findOne({ EDP_ID: edpData.EDP_ID }).select(['Status', 'Due_Date', 'Date_Agreement', 'Date_Review']).exec();
-
-        // Format the data as needed
-        const formattedData = {
-            edpID: edpData.EDP_ID,
-            updated_by: edpData.updated_by,
-            goalsLongterm: goalsData ? goalsData.Goals_Longterm : null,
-            goalsShortterm: goalsData ? goalsData.Goals_Shortterm : null,
-            competencyAddress: planData ? planData.Competency_Address : null,
-            competencyCluster: planData ? planData.Competency_Cluster : null,
-            actionPlan: planData ? planData.Action_Plan : null,
-            intervention: planData ? planData.Intervention : null,
-            remarks: planData ? planData.Remarks : null,
-            status: statusData ? statusData.Status : null,
-            dueDate: statusData ? statusData.Due_Date : null,
-            dateAgreement: statusData ? statusData.Date_Agreement : null,
-            dateReview: statusData ? statusData.Date_Review : null,
-        };
-
-        return formattedData;
-
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        throw new Error('Internal Server Error');
+        try{
+            const uniqueEDPID = await generateUniqueID(db, 'edp_id','edp');
+            console.log(uniqueEDPID);
+            const edpData = await db.promise().query('INSERT INTO edp (edp_id,created_by,updated_by) VALUES (?,?,?)', [uniqueEDPID,staffEmail,staffEmail]);
+            return edpData;
+        }catch(error){
+            throw new Error(error.message);
+        }
     }
 
-}
-
-async function updateGoals(edpID, updatedData) {
-    return await Goals.findOneAndUpdate({ EDP_ID: edpID }, {
-        $set: {
-            Goals_Longterm: updatedData.goalLongterm,
-            Goals_Shortterm: updatedData.goalShortterm,
+    static async getEDPByEmail({ staffEmail }) {
+        if(!staffEmail){
+            throw new Error('Something wrong with the data');
         }
-    }, { new: true });
-}
-
-async function updatePlan(edpID, updatedData) {
-    return await Plan.findOneAndUpdate({ EDP_ID: edpID }, {
-        $set: {
-            Competency_Address: updatedData.competencyAddress,
-            Competency_Cluster: updatedData.competencyCluster,
-            Action_Plan: updatedData.actionPlan,
-            Intervention: updatedData.intervention,
-            Remarks: updatedData.remarks,
+        try{
+            const [rows] = await db.promise().query(`
+                SELECT 
+                    edp.edp_id,
+                    edp.updated_by,
+                    goals.goals_longterm, 
+                    goals.goals_shortterm, 
+                    plan.competency_address, 
+                    plan.competency_cluster, 
+                    plan.action_plan, 
+                    plan.intervention, 
+                    plan.remarks, 
+                    status.status, 
+                    status.due_date, 
+                    status.date_agreement, 
+                    status.date_review
+                FROM 
+                    edp
+                    LEFT JOIN goals ON edp.edp_id = goals.edp_id
+                    LEFT JOIN plan ON edp.edp_id = plan.edp_id
+                    LEFT JOIN status ON edp.edp_id = status.edp_id
+                WHERE 
+                    edp.created_by = ?
+            `, [staffEmail]);
+    
+            // Format the data as needed
+            const formattedGoals = rows.map(row => ({
+                edpID: row.edp_id,
+                updated_by: row.updated_by,
+                goalsLongterm: row.goals_longterm,
+                goalsShortterm: row.goals_shortterm,
+                competencyAddress: row.competency_address,
+                competencyCluster: row.competency_cluster,
+                actionPlan: row.action_plan,
+                intervention: row.intervention,
+                remarks: row.remarks,
+                status: row.status,
+                dueDate: row.due_date,
+                dateAgreement: row.date_agreement,
+                dateReview: row.date_review
+            }));
+    
+            return formattedGoals;
+        
+        }catch(error){
+            throw new Error(error.message);
         }
-    }, { new: true });
-}
-
-async function updateStatus(edpID, updatedData) {
-    return await Status.findOneAndUpdate({ EDP_ID: edpID }, {
-        $set: {
-            Status: updatedData.status,
-            Due_Date: updatedData.dueDate,
-            Date_Agreement: updatedData.dateAgreement,
-            Date_Review: updatedData.dateReview,
-        }
-    }, { new: true });
-}
-
-
-edpSchema.statics.updateEDPByID = async function(edpID, updatedData) {
-    // Validation
-    if (!updatedData) {
-        throw new Error('Something wrong with the data');
     }
 
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
-    try {
-        const updatedEDPResult = await this.findOneAndUpdate({ EDP_ID: edpID }, {
-            $set: {
-                updated_by: updatedData.staffEmail,
-                updated_at: Date.now(),
+    static async getEDPByID({ edpID }) {
+        if(!edpID){
+            throw new Error('Something wrong with the data');
+        }
+        try{
+            const [rows] = await db.promise().query(`
+                SELECT 
+                    edp.*,
+                    goals.goals_longterm, 
+                    goals.goals_shortterm, 
+                    plan.competency_address, 
+                    plan.competency_cluster, 
+                    plan.action_plan, 
+                    plan.intervention, 
+                    plan.remarks, 
+                    status.status, 
+                    status.due_date, 
+                    status.date_agreement, 
+                    status.date_review
+                FROM 
+                    edp
+                    LEFT JOIN goals ON edp.edp_id = goals.edp_id
+                    LEFT JOIN plan ON edp.edp_id = plan.edp_id
+                    LEFT JOIN status ON edp.edp_id = status.edp_id
+                WHERE 
+                    edp.edp_id = ?
+            `, [edpID]);
+    
+            if (rows.length === 0) {
+                return null;
             }
-        }, { new: true });
-
-        const updateGoalsResult = await updateGoals(edpID, updatedData);
-        const updatePlanResult = await updatePlan(edpID, updatedData);
-        const updateStatusResult = await updateStatus(edpID, updatedData);
-
-        const allResults = {
-            edpID: updatedEDPResult.EDP_ID,
-            updated_by: updatedEDPResult.updated_by,
-            goalsLongterm: updateGoalsResult ? updateGoalsResult.Goals_Longterm : null,
-            goalsShortterm: updateGoalsResult ? updateGoalsResult.Goals_Shortterm : null,
-            competencyAddress: updatePlanResult ? updatePlanResult.Competency_Address : null,
-            competencyCluster: updatePlanResult ? updatePlanResult.Competency_Cluster : null,
-            actionPlan: updatePlanResult ? updatePlanResult.Action_Plan : null,
-            intervention: updatePlanResult ? updatePlanResult.Intervention : null,
-            remarks: updatePlanResult ? updatePlanResult.Remarks : null,
-            status: updateStatusResult ? updateStatusResult.Status : null,
-            dueDate: updateStatusResult ? updateStatusResult.Due_Date : null,
-            dateAgreement: updateStatusResult ? updateStatusResult.Date_Agreement : null,
-            dateReview: updateStatusResult ? updateStatusResult.Date_Review : null,
-        };
-
-        if (updatedEDPResult && updateGoalsResult && updatePlanResult && updateStatusResult) {
-            console.log('All documents updated successfully');
-            await session.commitTransaction();
-            session.endSession();
-            return allResults;
-        } else {
-            console.log('Some documents not found');
-            throw new Error('Some documents not found');
+            
+            //Get Only first row
+            const row = rows[0];
+    
+            const formattedGoals = {
+                edpID: row.edp_id,
+                created_by: row.created_by,
+                created_at: row.created_at,
+                updated_by: row.updated_by,
+                updated_at: row.updated_at,
+                goalsLongterm: row.goals_longterm,
+                goalsShortterm: row.goals_shortterm,
+                competencyAddress: row.competency_address,
+                competencyCluster: row.competency_cluster,
+                actionPlan: row.action_plan,
+                intervention: row.intervention,
+                remarks: row.remarks,
+                status: row.status,
+                dueDate: row.due_date,
+                dateAgreement: row.date_agreement,
+                dateReview: row.date_review
+            };
+    
+            return formattedGoals;
+        
+        }catch(error){
+            throw new Error(error.message);
         }
-    } catch (error) {
-        console.error('Error updating documents:', error);
-        await session.abortTransaction();
-        session.endSession();
-        throw error;
-    }
-};
-
-edpSchema.statics.deleteEDPByID = async function({ edpID }) {
-    // Validation
-    if (!edpID) {
-        throw new Error('Something wrong with the data');
     }
 
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
-    try {
-        const deleteEDPResult = await this.findOneAndDelete({ EDP_ID: edpID });
-        const deleteGoalsResult = await Goals.findOneAndDelete({ EDP_ID: edpID });
-        const deletePlanResult = await Plan.findOneAndDelete({ EDP_ID: edpID });
-        const deleteStatusResult = await Status.findOneAndDelete({ EDP_ID: edpID });
-
-        if (deleteEDPResult && deleteGoalsResult && deletePlanResult && deleteStatusResult) {
-            console.log('All documents deleted successfully');
-            await session.commitTransaction();
-            session.endSession();
-            return "Done Delete";
-        } else {
-            console.log('Some documents not found');
-            throw new Error('Some documents not found');
+    static async updateEDPDetails( edpID, updatedData){
+        if(!edpID || !updatedData){
+            throw new Error('Something wrong with the data');
         }
-    } catch (error) {
-        console.error('Error Delete documents:', error);
-        await session.abortTransaction();
-        session.endSession();
-        throw error;
+
+        try{
+            await db.promise().query(`
+            UPDATE edp 
+            SET updated_by = ?, updated_at = NOW()
+            WHERE edp_id = ?
+        `, [updatedData.staffEmail, edpID]);
+
+
+            await db.promise().query(`
+            UPDATE goals 
+            SET goals_longterm = ?, goals_shortterm = ?
+            WHERE edp_id = ?
+        `, [updatedData.goalLongterm, updatedData.goalShortterm, edpID]);
+    
+            
+            await db.promise().query(`
+                UPDATE plan 
+                SET competency_address = ?, competency_cluster = ?, action_plan = ?, intervention = ?, remarks = ?
+                WHERE edp_id = ?
+            `, [updatedData.competencyAddress, updatedData.competencyCluster, updatedData.actionPlan, updatedData.intervention, updatedData.remarks, edpID]);
+
+
+            await db.promise().query(`
+                UPDATE status 
+                SET status = ?, 
+                due_date = ?, 
+                date_agreement = IFNULL(?, NULL), 
+                date_review = IFNULL(?, NULL)
+
+                WHERE edp_id = ?
+            `, [updatedData.status, updatedData.dueDate, updatedData.date_agreement, updatedData.date_review, edpID]);
+
+            return true;
+        }catch(error){
+            console.error('Failed to update data:', error);
+            return false;
+        }
     }
+
+    static async deleteEDPByID({ edpID }) {
+        if (!edpID) {
+            throw new Error('Invalid edpID');
+        }
+    
+        try {
+            // Delete related rows in the child tables first
+            await db.promise().query('DELETE FROM goals WHERE edp_id = ?', [edpID]);
+            await db.promise().query('DELETE FROM plan WHERE edp_id = ?', [edpID]);
+            await db.promise().query('DELETE FROM status WHERE edp_id = ?', [edpID]);
+    
+            // Then, delete the edp row
+            await db.promise().query('DELETE FROM edp WHERE edp_id = ?', [edpID]);
+
+            return true;
+        } catch (error) {
+            console.error('Failed to delete data:', error);
+            return false;
+        }
+    }
+    
 }
 
+module.exports = EDP;
 
 
 
 
-module.exports = mongoose.model('EDP', edpSchema);

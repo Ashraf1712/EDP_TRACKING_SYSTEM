@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const mongoose = require('mongoose');
+const db = require('./config/db.js');
 const path = require('path');
 
 //Routes Import
@@ -20,6 +20,7 @@ const app = express();
 
 // Middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use((req, res, next) => {
@@ -30,19 +31,6 @@ app.use((req, res, next) => {
     }
     next()
 })
-
-// Connect to MongoDB using the MONGO_URI from the .env file
-mongoose.connect(process.env.MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        dbName: 'edpDB',
-    })
-    .then(() => {
-        console.log('Connected to MongoDB');
-    })
-    .catch((error) => {
-        console.error('Error connecting to MongoDB:', error);
-    });
 
 //Routes
 app.use('/api/user', userRoutes);

@@ -35,22 +35,28 @@ const updateEDPData = async(req, res) => {
     const edp = req.body;
     const { edpID } = req.params;
     try {
-        const edpData = await EDP.updateEDPByID(edpID, edp)
-        res.status(200).json(edpData)
+        const edpData = await EDP.updateEDPDetails(edpID, edp)
+        if(edpData){
+            // If the update is successful, retrieve the updated data
+            const updatedEDPData = await EDP.getEDPByID({ edpID });
+            res.status(200).json(updatedEDPData);
+        }else{
+            res.status(400).json({ error: 'Failed to update data' });
+        }
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
 }
 
-const deleteEDPData = async(req, res) => {
+const deleteEDPData = async (req, res) => {
     const { edpID } = req.params;
     try {
-        const edpData = await EDP.deleteEDPByID({ edpID })
-        res.status(200).json(edpData)
+        await EDP.deleteEDPByID({ edpID });
+        res.status(200).json({ message: 'Data deleted successfully' });
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        res.status(400).json({ error: error.message });
     }
-}
+};
 
 module.exports = {
     createEDPData,

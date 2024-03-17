@@ -11,17 +11,6 @@ const createPlanData = async(req, res) => {
     }
 }
 
-const getPlanData = async(req, res) => {
-    const { goalsID } = req.body;
-
-    try {
-        const planData = await Plan.getPlanByGoalsID({ goalsID })
-        res.status(200).json({ planData })
-    } catch (error) {
-        res.status(400).json({ error: error.message })
-    }
-}
 module.exports = {
     createPlanData,
-    getPlanData
 }
