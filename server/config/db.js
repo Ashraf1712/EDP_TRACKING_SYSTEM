@@ -11,7 +11,11 @@ const db = mysql.createPool({
 	connectionLimit: 10,
 	queueLimit: 0,
 });
-db.getConnection(() => {
+db.getConnection((err, connection) => {
+	if (err) {
+		console.error("Error connecting to database: " + err.stack);
+		return;
+	}
 	console.log("Connected to database");
 });
 

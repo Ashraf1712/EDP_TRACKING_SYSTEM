@@ -36,11 +36,11 @@ app.use((req, res, next) => {
 });
 
 //Routes
-app.use("/api/user", userRoutes);
-app.use("/api/goals", goalsRoutes);
-app.use("/api/plan", planRoutes);
-app.use("/api/status", statusRoutes);
-app.use("/api/edp", edpRoutes);
+app.use("/user", userRoutes);
+app.use("/goals", goalsRoutes);
+app.use("/plan", planRoutes);
+app.use("/status", statusRoutes);
+app.use("/edp", edpRoutes);
 
 const absolutePath = path.join(process.cwd(), "public", "uploads");
 app.use("/uploads", express.static(absolutePath));
